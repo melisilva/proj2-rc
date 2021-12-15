@@ -30,9 +30,11 @@
 
 
 
-### Example for steps 2 & 3 (configuração da bancada 2)
+### Steps 2 & 3 (bancada 3)
 
-Ligar Cabos
+Não era possível usarmos o tux33 pois ainda estava com as configurações do primeiro projeto.
+
+Ligar Cabos:
 
 ```bash
 TUX32E0 -> Switch
@@ -90,7 +92,7 @@ Associa endereço IP a porta para saber por onde mandar.
 
 Neste pc :
 
-- Destination 172.16.20.0
+- Destination 172.16.30.0
 - Iface eth0
 
 ```bash
@@ -100,7 +102,7 @@ arp -a
 Associa endereço IP a um Endereço MAC
 
 ```bash
-< ? (172.16.20.254) at 00:08:54:50:3f:2c [ether] on eth0
+< ? (172.16.30.254) at 00:08:54:50:3f:2c [ether] on eth0
 ```
 
 ### Step 6
@@ -108,7 +110,7 @@ Associa endereço IP a um Endereço MAC
 tux3:
 
 ```bash
-> arp -d 172.16.20.254
+> arp -d 172.16.30.254
 > arp -a [retorna nada]
 ```
 
@@ -118,5 +120,28 @@ Não esquecer de tirar fotos de tudo e responder às questões da experiência e
 
 ### Perguntas
 
-1. Address Resolution Protocol (ARP) is **a procedure for mapping a dynamic IP address to a permanent physical machine address in a local area network (LAN)**. The job of ARP is essentially to translate 32-bit addresses to 48-bit addresses and vice versa.
-2. Em tux2, o MAC address era 00:21:5a:61:30:63 e o IP era 172.16.30.1 (configurado por nós). Em tux4, MAC era  00:21:5a:5a:7d:74  e o IP era 
+1. What are the ARP packets and what are they used for?
+
+   Address Resolution Protocol (ARP) is **a procedure for mapping a dynamic IP address to a permanent physical machine address in a local area network (LAN)**. The job of ARP is essentially to translate 32-bit addresses to 48-bit addresses and vice versa.
+
+   
+
+2. What are the MAC and IP addresses of ARP packets and why?
+
+   Em tux2, o MAC address era 00:21:5a:61:30:63 e o IP era 172.16.30.1 (configurado por nós). Em tux4, MAC era  00:21:5a:5a:7d:74  e o IP era 172.16.30.254 (configurado por nós).
+
+   
+
+3. What packets does the `ping` command generate?
+
+4. What are the MAC and IP addresses of the `ping` packets?
+
+5. How to determine if a receiving Ethernet frame is ARP, IP, ICMP?
+
+6. How to determine the length of a receiving frame?
+
+7. What is the loopback interface and why is it important?
+
+   
+
+   
