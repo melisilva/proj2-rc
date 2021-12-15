@@ -20,9 +20,9 @@
 Ligar Cabos
 
 ```bash
-TUX23E0  -> Switch Porta 1 (Verificar que luz acende no Switch para saber porta)
-TUX24E0  -> Switch Porta 2
-TUX22E0  -> Switch Porta 3
+TUX33E0  -> Switch Porta 1 (Verificar que luz acende no Switch para saber porta)
+TUX34E0  -> Switch Porta 2
+TUX32E0  -> Switch Porta 3
 ```
 
 Vista frontal das ligações no switch, lado esquerdo
@@ -32,27 +32,27 @@ Vista frontal das ligações no switch, lado esquerdo
 | TUX23E0 (1) | TUX22E0 (3) | empty(5) |
 | TUX24E0 (2) | empty(4)    | empty(6) |
 
-tux23:
+tux33:
 
 ```bash
 > ifconfig eth0 up
-> ifconfig eth0 172.16.20.1/24
+> ifconfig eth0 172.16.30.1/24
 > ifconfig eth0 
 ```
 
-tux24:
+tux34:
 
 ```bash
 > ifconfig eth0 up
-> ifconfig eth0 172.16.20.254/24
+> ifconfig eth0 172.16.30.254/24
 > ifconfig eth0 
 ```
 
-tux22:
+tux32:
 
 ```bash
 > ifconfig eth0 up
-> ifconfig eth0 172.16.21.1/24
+> ifconfig eth0 172.16.31.1/24
 > ifconfig eth0 
 ```
 
@@ -60,16 +60,16 @@ tux22:
 
 | IP            | MAC               | tux/ether  |
 | ------------- | ----------------- | ---------- |
-| 172.16.20.1   | 00:21:5a:5a:7d:12 | tux23 eth0 |
-| 172.16.21.1   | 00:21:5a:61:2b:72 | tux22 eth0 |
-| 172.16.20.254 | 00:08:54:50:3f:2c | tux24 eth0 |
+| 172.16.30.1   | 00:21:5a:61:24:92 | tux33 eth0 |
+| 172.16.31.1   | 00:21:5a:61:30:63 | tux32 eth0 |
+| 172.16.30.254 | 00:21:5a:5a:7d:74 | tux34 eth0 |
 
 ### Step 2
 
 Ligar Cabo
 
 ```bash
-TUX23S0  -> T3
+TUX33S0  -> T3
 T4 -> Switch Console
 ```
 
@@ -126,13 +126,13 @@ Add port 2 to VLAN20:
 
 ### Step 3
 
-Criar outra VLAN (vlan21):
+Criar outra VLAN (vlan31):
 
 ```
 »configure terminal
-»vlan 21
+»vlan 31
 »end
-»show vlan id 21
+»show vlan id 31
 ```
 
 Adiciona a porta do tux22, porta 3.
@@ -143,7 +143,7 @@ Add port 3 to VLAN21:
 »configure terminal
 »interface fastethernet 0/3            
 »switchport mode access
-»switchport access vlan 21
+»switchport access vlan 31
 »end
 ```
 

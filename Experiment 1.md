@@ -35,15 +35,15 @@
 Ligar Cabos
 
 ```bash
-TUX23E0 -> Switch
-TUX24E0 -> Switch
+TUX32E0 -> Switch
+TUX34E0 -> Switch
 ```
 
-tux3:
+tux2:
 
 ```bash
 > ifconfig eth0 up
-> ifconfig eth0 172.16.20.1/24
+> ifconfig eth0 172.16.30.1/24
 > ifconfig eth0
 ```
 
@@ -51,21 +51,21 @@ tux4:
 
 ```bash
 > ifconfig eth0 up
-> ifconfig eth0 172.16.20.254/24
+> ifconfig eth0 172.16.30.254/24
 > ifconfig eth0 
 ```
 
 | IP            | MAC               | tux/ether  |
 | ------------- | ----------------- | ---------- |
-| 172.16.20.1   | 00:21:5a:5a:7d:12 | tux23 eth0 |
-| 172.16.20.254 | 00:08:54:50:3f:2c | tux24 eth0 |
+| 172.16.30.1   | 00:21:5a:61:30:63 | tux32 eth0 |
+| 172.16.30.254 | 00:21:5a:5a:7d:74 | tux34 eth0 |
 
 ### Step 4
 
-tux3:
+tux2:
 
 ```bash
-ping 172.16.20.254
+ping 172.16.30.254
 ```
 
 recebe pacotes de 64 bytes desse endereço
@@ -73,14 +73,14 @@ recebe pacotes de 64 bytes desse endereço
 tux4:
 
 ```bash
-ping 172.16.20.1
+ping 172.16.30.1
 ```
 
 recebe pacotes de 64 bytes desse endereço.
 
 ### Step 5
 
-tux3:
+tux2:
 
 ```bash
 route -n
@@ -115,3 +115,8 @@ tux3:
 Restantes passos são feitos na aplicação Wireshark.
 
 Não esquecer de tirar fotos de tudo e responder às questões da experiência e guardá-las para colocar no relatório.
+
+### Perguntas
+
+1. Address Resolution Protocol (ARP) is **a procedure for mapping a dynamic IP address to a permanent physical machine address in a local area network (LAN)**. The job of ARP is essentially to translate 32-bit addresses to 48-bit addresses and vice versa.
+2. Em tux2, o MAC address era 00:21:5a:61:30:63 e o IP era 172.16.30.1 (configurado por nós). Em tux4, MAC era  00:21:5a:5a:7d:74  e o IP era 
