@@ -6,6 +6,8 @@
 #include<arpa/inet.h>
 
 #include "parse.h"
+#include "socket.h"
+#include "constants.h"
 
 int main(int argc, char * argv[]){
     //It should take an argument that adopts the URL syntax
@@ -47,6 +49,47 @@ int main(int argc, char * argv[]){
 
     printf("Host name  : %s\n", h->h_name);
     printf("IP Address : %s\n", inet_ntoa(*((struct in_addr *) h->h_addr)));
+
+    char* ip =  inet_ntoa(*((struct in_addr *) h->h_addr));
+    //Start connection telnet ftp.up.pt 21
+    int socketfd=start_socket(ip,PORT);
+
+    //Get reply 220-Welcome to the University of Porto's mirror archive (mirrors.up.pt) 
+    int code= getReply(socketfd);
+    //Check if it's the code we wanted
+    if(code!=SERVICE_READY){
+        return 1;
+    }
+
+    //Do login with user + pass
+    //Send the value of user
+    if(write_commands(socketfd,"user",user)<0){ //does user have to be in all caps?
+        return 1;
+    }
+    //Check if the code received was 331 or 230 (check RFC 959 page 50)
+    code=getReply(socketfd);
+    if(code!=USER_OKAY && code != USER_LOGGED_IN){
+        return 1;
+    }
+    
+    //Send the value of password
+    if(write_commands(socketfd,"pass",password)<0){
+        return 1;
+    }
+
+    //Check if the code received was 230
+    code=getReply(socketfd);
+    if(code != USER_LOGGED_IN){
+        return 1;
+    }
+
+    //Enter passive mode
+
+    //term_B socket
+
+    //Retrieve file
+
+
 
 
 }
