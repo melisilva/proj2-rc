@@ -20,6 +20,7 @@ int main(int argc, char * argv[]){
     int size_url = strlen(argv[1])-5;
     char*url = (char*)malloc(size_url);
     memcpy(url,argv[1]+6,size_url);
+    printf("%s\n",url);
     //Need to parse the URL to get the user, password, host and url-path
     
     char* user= (char*)malloc(512); //might need to make this a constant?
@@ -28,6 +29,11 @@ int main(int argc, char * argv[]){
     char*path=(char*)malloc(512);
 
     parse_url(url,size_url,user,password,host,path);
+
+    printf("%s\n",user);
+    printf("%s\n",password);
+    printf("%s\n",host);
+    printf("%s\n",path);
 
 
 }

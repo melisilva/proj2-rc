@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "parse.h"
 
@@ -14,17 +15,20 @@ and url-path. host is ftp.up.pt and the path is pub/kodi/timestamp.txt
     
     Like the example showed us, there might not be an user and password defined
     */
+   printf("IN PARSE\n");
+   printf("%s\n",url);
    int i=0,u=0,p=0,h=0,pt=0;
    char rn;
    urlState state=USER;
 
     //Check if there's user and password in the url
        if(strchr(url,'@')!=NULL){ //paths could have :
-            switch(state){
-                if(i<size_url){
+          while(1){
+              if(i<size_url){
                     rn=url[i];
                 }
                 i++;
+              switch(state){
                 case USER:
                   if(rn==':'){
                       state=PWD;
@@ -60,15 +64,18 @@ and url-path. host is ftp.up.pt and the path is pub/kodi/timestamp.txt
                       path[pt]=rn;
                       pt++;
                   }
-            }    
+            } 
+          }   
     }
     else{ //In case it's an anonymous login
+        printf("Hello\n");
         state=HOST;
-        switch(state){
-                if(i<size_url){
+        while(1){
+            if(i<size_url){
                     rn=url[i];
                 }
                 i++;
+            switch(state){
                 case HOST:
                  if(rn=='/'){
                     state=PATH;
@@ -86,6 +93,7 @@ and url-path. host is ftp.up.pt and the path is pub/kodi/timestamp.txt
                       path[pt]=rn;
                       pt++;
                   }
+        }
         }
     }
     return -1;    
