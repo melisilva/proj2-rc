@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include<arpa/inet.h>
 
 #include "parse.h"
 
@@ -34,6 +37,16 @@ int main(int argc, char * argv[]){
     printf("%s\n",password);
     printf("%s\n",host);
     printf("%s\n",path);
+
+    //Get server's IP-->code from getip.c
+    struct hostent *h;
+    if ((h = gethostbyname(host)) == NULL) {
+        herror("gethostbyname()");
+        return 1;
+    }
+
+    printf("Host name  : %s\n", h->h_name);
+    printf("IP Address : %s\n", inet_ntoa(*((struct in_addr *) h->h_addr)));
 
 
 }
