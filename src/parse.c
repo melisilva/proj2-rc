@@ -69,6 +69,8 @@ and url-path. host is ftp.up.pt and the path is pub/kodi/timestamp.txt
     }
     else{ //In case it's an anonymous login
         printf("Hello\n");
+        user="anonymous";
+        password="qualquer-password";
         state=HOST;
         while(1){
             if(i<size_url){

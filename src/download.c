@@ -65,7 +65,7 @@ int main(int argc, char * argv[]){
 
     //Do login with user + pass
     //Send the value of user
-    if(write_commands(socketAfd,"user",user)<0){ //does user have to be in all caps?
+    if(write_commands(socketAfd,"user ",user)<0){ //does user have to be in all caps?
         printf("ERROR\n");
         return 1;
     }
@@ -77,7 +77,7 @@ int main(int argc, char * argv[]){
     }
     
     //Send the value of password
-    if(write_commands(socketAfd,"pass",password)<0){
+    if(write_commands(socketAfd,"pass ",password)<0){
        printf("ERROR\n");
         return 1;
     }
@@ -113,7 +113,7 @@ awaits the connection
     //Reply doesn't matter right now
     //Retrieve file (in the first socket <=> term_A)
     //Example: retr pub/kodi/timestamp.txt -->so basically it's retr + path
-    if(write_commands(socketAfd,"retr",path)<0){
+    if(write_commands(socketAfd,"retr ",path)<0){
        printf("ERROR\n");
        return 1;
     }

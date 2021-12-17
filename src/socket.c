@@ -60,15 +60,23 @@ int getCode(int socketfd,char*reply){
 }
 
 int write_commands(int socketfd,char*cmd,char*arg){
+    /*
+    USER <SP> <username> <CRLF>
+    CRLF means Carriage Return Line Feed
+    A line feed means moving one line forward. The code is \n .
+    A carriage return means moving the cursor to the beginning of the line. The code is \r .
+    */
     if(write(socketfd,cmd,strlen(cmd))<0){
         printf("ERROR\n");
         return 1;
     }
-    if(write(socketfd,arg,strlen(arg))<0){
-        printf("ERROR\n");
-        return 1;
+    if(arg!=""){
+        if(write(socketfd,arg,strlen(arg))<0){
+            printf("ERROR\n");
+            return 1;
+        }
     }
-    if(write(socketfd,'\n',strlen('\n'))<0){
+    if(write(socketfd,'\r\n',strlen('\r\n'))<0){
         printf("ERROR\n");
         return 1;
     }
