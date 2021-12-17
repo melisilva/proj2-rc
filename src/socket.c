@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <libgen.h> 
 
 #include "constants.h"
 
@@ -104,4 +105,26 @@ int getPort(int socketfd){
 
     port=atoi(n5)*256+atoi(n6);
     return port;
+}
+
+int transfer(int socketfd, char*path){
+    char*fileName= basename(path); /*The functions dirname() and basename() break a null-terminated pathname string into directory and filename components. In the usual case, dirname() returns the string up to, but not including, the final '/', and basename() returns the component following the final '/'. */
+    //Opening BINARY mode data connection-->so we need to open file in writing binary mode
+    FILE *fp=fopen(fileName,"wb");
+    if(fp==NULL){
+        printf("ERROR\n");
+        return 1;
+    }
+
+    //socket B has the data that we need to put in the file for A
+    char buffer[255];
+    int bytes;
+    while((bytes=read(socketfd,buffer,255))>0){
+        if(fwrite(buffer,bytes,1,fp)<0){
+            printf("ERROR\n");
+            return 1;
+        }
+    }
+    fclose(fp);
+    return 0;
 }

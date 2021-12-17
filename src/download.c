@@ -126,7 +126,21 @@ awaits the connection
         return 1;
     }
 
-    
+    //B has to send the wanted file to A
+    if(transfer(socketBfd,path)<0){
+        printf("ERROR\n");
+        return 1;
+    }
 
+    //Check if reply code is 226
+    code=getCode(socketfd);
+    if(code != FILE_TRANSFER_SUCCESS){
+        printf("ERROR\n");
+        return 1;
+    }    
 
+    //Do we need to write the command quit or can we just close the sockets?
+    close(socketfd);
+    close(socketBfd);
+    return 0;
 }

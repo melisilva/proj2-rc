@@ -10,4 +10,3 @@ typedef enum
 } urlState;
 
 int parse_url(char* url, int size_url, char* user, char*password, char*host, char*path);
-char * getFilename(char * path);

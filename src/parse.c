@@ -99,12 +99,3 @@ and url-path. host is ftp.up.pt and the path is pub/kodi/timestamp.txt
     return -1;    
 }
 
-char * getFilename(char * path) {
-    char * filename = path, *p;
-    for (p = path; *p; p++) {
-        if (*p == '/' || *p == '\\' || *p == ':') {
-            filename = p + 1;
-        }
-    }
-    return filename;
-}
