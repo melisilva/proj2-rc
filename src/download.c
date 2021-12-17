@@ -30,10 +30,10 @@ int main(int argc, char * argv[]){
     printf("%s\n",url);
     //Need to parse the URL to get the user, password, host and url-path
     
-    char* user= (char*)malloc(512); //might need to make this a constant?
-    char* password= (char*)malloc(512);
-    char*host= (char*)malloc(512);
-    char*path=(char*)malloc(512);
+    char* user= (char*)malloc(PARAMETER_LENGTH); //might need to make this a constant?
+    char* password= (char*)malloc(PARAMETER_LENGTH);
+    char*host= (char*)malloc(PARAMETER_LENGTH);
+    char*path=(char*)malloc(PARAMETER_LENGTH);
 
     parse_url(url,size_url,user,password,host,path);
 
@@ -53,11 +53,10 @@ int main(int argc, char * argv[]){
     printf("IP Address : %s\n", inet_ntoa(*((struct in_addr *) h->h_addr)));
 
     char* ip =  inet_ntoa(*((struct in_addr *) h->h_addr));
-    //Start connection telnet ftp.up.pt 21
-    int socketfd=start_socket(ip,PORT);
+    int socketAfd=start_socket(ip,PORT);
 
-    //Get reply 220-Welcome to the University of Porto's mirror archive (mirrors.up.pt) 
-    int code= getReply(socketfd);
+    //Get code reply 220
+    int code= getReply(socketAfd);
     //Check if it's the code we wanted
     if(code!=SERVICE_READY){
         printf("ERROR\n");
@@ -66,32 +65,32 @@ int main(int argc, char * argv[]){
 
     //Do login with user + pass
     //Send the value of user
-    if(write_commands(socketfd,"user",user)<0){ //does user have to be in all caps?
+    if(write_commands(socketAfd,"user",user)<0){ //does user have to be in all caps?
         printf("ERROR\n");
         return 1;
     }
     //Check if the code received was 331 or 230 (check RFC 959 page 50)
-    code=getReply(socketfd);
+    code=getReply(socketAfd);
     if(code!=USER_OKAY && code != USER_LOGGED_IN){
        printf("ERROR\n");
         return 1;
     }
     
     //Send the value of password
-    if(write_commands(socketfd,"pass",password)<0){
+    if(write_commands(socketAfd,"pass",password)<0){
        printf("ERROR\n");
         return 1;
     }
 
     //Check if the code received was 230
-    code=getReply(socketfd);
+    code=getReply(socketAfd);
     if(code != USER_LOGGED_IN){
         printf("ERROR\n");
         return 1;
     }
 
     //Enter passive mode
-    if(write_commands(socketfd,"pasv","")<0){
+    if(write_commands(socketAfd,"pasv","")<0){
         printf("ERROR\n");
         return 1;
     }
@@ -104,7 +103,7 @@ awaits the connection
              port= 19*256+91= 4955
     */
     int port;
-    if((port=getPort(socketfd))<0){
+    if((port=getPort(socketAfd))<0){
         printf("ERROR\n");
         return 1;
     }
@@ -114,13 +113,14 @@ awaits the connection
     //Reply doesn't matter right now
     //Retrieve file (in the first socket <=> term_A)
     //Example: retr pub/kodi/timestamp.txt -->so basically it's retr + path
-    if(write_commands(socketfd,"retr",path)<0){
+    if(write_commands(socketAfd,"retr",path)<0){
        printf("ERROR\n");
        return 1;
     }
 
-    //Check if reply code is 150
-    code=getCode(socketfd);
+    //Check if reply code is 150.
+    char* reply=(char*)malloc(BUFFER_LENGTH);
+    code=getCode(socketAfd,reply);
     if(code != FILE_OKAY_DATA_SOON){
         printf("ERROR\n");
         return 1;
@@ -133,14 +133,14 @@ awaits the connection
     }
 
     //Check if reply code is 226
-    code=getCode(socketfd);
+    code=getCode(socketAfd,reply);
     if(code != FILE_TRANSFER_SUCCESS){
         printf("ERROR\n");
         return 1;
     }    
 
     //Do we need to write the command quit or can we just close the sockets?
-    close(socketfd);
+    close(socketAfd);
     close(socketBfd);
     return 0;
 }

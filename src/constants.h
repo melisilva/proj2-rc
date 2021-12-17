@@ -8,3 +8,5 @@
 #define USER_OKAY  331  //User name okay
 #define NOT_LOGGED_IN  530  //Not logged in
 #define PORT  21
+#define BUFFER_LENGTH 255
+#define PARAMETER_LENGTH 512

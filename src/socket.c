@@ -50,11 +50,10 @@ int getReply(int socketfd){
     return code;
 }
 
-int getCode(int socketfd){
+int getCode(int socketfd,char*reply){
     char*str_code= (char*)malloc(4);
-    int code,port;
-    char* reply=(char*)malloc(255);
-    read(socketfd,reply,255);
+    int code;
+    read(socketfd,reply,BUFFER_LENGTH);
     memcpy(str_code,reply,3);
     sccanf(str_code,"%d",code);
     return code;
@@ -78,6 +77,7 @@ int write_commands(int socketfd,char*cmd,char*arg){
 
 int getPort(int socketfd){
     //227 Entering Passive Mode (193,136,28,12,19,91)
+    char* reply=(char*)malloc(BUFFER_LENGTH);,
     int code=getCode(socketfd);
 
     //Check if code is 227
@@ -103,7 +103,7 @@ int getPort(int socketfd){
     n5=strtok(NULL,",");
     n6=strtok(NULL,",");
 
-    port=atoi(n5)*256+atoi(n6);
+    int port=atoi(n5)*256+atoi(n6);
     return port;
 }
 
@@ -117,9 +117,9 @@ int transfer(int socketfd, char*path){
     }
 
     //socket B has the data that we need to put in the file for A
-    char buffer[255];
+    char buffer[BUFFER_LENGTH];
     int bytes;
-    while((bytes=read(socketfd,buffer,255))>0){
+    while((bytes=read(socketfd,buffer,BUFFER_LENGTH))>0){
         if(fwrite(buffer,bytes,1,fp)<0){
             printf("ERROR\n");
             return 1;
