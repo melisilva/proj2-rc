@@ -49,6 +49,16 @@ int getReply(int socketfd){
     return code;
 }
 
+int getCode(int socketfd){
+    char*str_code= (char*)malloc(4);
+    int code,port;
+    char* reply=(char*)malloc(255);
+    read(socketfd,reply,255);
+    memcpy(str_code,reply,3);
+    sccanf(str_code,"%d",code);
+    return code;
+}
+
 int write_commands(int socketfd,char*cmd,char*arg){
     if(write(socketfd,cmd,strlen(cmd))<0){
         printf("ERROR\n");
@@ -67,12 +77,7 @@ int write_commands(int socketfd,char*cmd,char*arg){
 
 int getPort(int socketfd){
     //227 Entering Passive Mode (193,136,28,12,19,91)
-    char*str_code= (char*)malloc(4);
-    int code,port;
-    char* reply=(char*)malloc(255);
-    read(socketfd,reply,255);
-    memcpy(str_code,reply,3);
-    sccanf(str_code,"%d",code);
+    int code=getCode(socketfd);
 
     //Check if code is 227
     if(code != PASSIVE_MODE){

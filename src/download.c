@@ -119,10 +119,14 @@ awaits the connection
        return 1;
     }
 
-    //There's two reply codes in this situation: 150 & 226
+    //Check if reply code is 150
+    code=getCode(socketfd);
+    if(code != FILE_OKAY_DATA_SOON){
+        printf("ERROR\n");
+        return 1;
+    }
+
     
-
-
 
 
 }
