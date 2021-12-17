@@ -6,6 +6,8 @@
 #include <unistd.h>
 #include <string.h>
 
+#include "constants.h"
+
 int start_socket(char*ip,int port){
     int socketfd;
     struct sockaddr_in server_addr;
@@ -18,7 +20,7 @@ int start_socket(char*ip,int port){
      /*open a TCP socket*/
     if ((socketfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         perror("socket()");
-        return -1;
+        return 1;
     }
 
      /*connect to the server*/
@@ -26,7 +28,7 @@ int start_socket(char*ip,int port){
                 (struct sockaddr *) &server_addr,
                 sizeof(server_addr)) < 0) {
         perror("connect()");
-        return -1;
+        return 1;
     }
 
     return socketfd;
@@ -49,13 +51,52 @@ int getReply(int socketfd){
 
 int write_commands(int socketfd,char*cmd,char*arg){
     if(write(socketfd,cmd,strlen(cmd))<0){
+        printf("ERROR\n");
         return 1;
     }
     if(write(socketfd,arg,strlen(arg))<0){
+        printf("ERROR\n");
         return 1;
     }
     if(write(socketfd,'\n',strlen('\n'))<0){
+        printf("ERROR\n");
         return 1;
     }
     return 0;
+}
+
+int getPort(int socketfd){
+    //227 Entering Passive Mode (193,136,28,12,19,91)
+    char*str_code= (char*)malloc(4);
+    int code,port;
+    char* reply=(char*)malloc(255);
+    read(socketfd,reply,255);
+    memcpy(str_code,reply,3);
+    sccanf(str_code,"%d",code);
+
+    //Check if code is 227
+    if(code != PASSIVE_MODE){
+        printf("ERROR\n");
+        return -1;
+    }
+
+    /*
+    The C library function char *strtok(char *str, const char *delim) 
+    breaks string str into a series of tokens using the delimiter delim.
+
+    We can use this function to break the reply to get what we want.
+*/
+    char*token,*n1,*n2,*n3,*n4,*n5,*n6;
+    token=strtok(reply,"(");
+    token=strtok(NULL,"(");
+    token=strtok(token,")");
+    n1=strtok(token,",");
+    n2=strtok(NULL,",");
+    n3=strtok(NULL,",");
+    n4=strtok(NULL,",");
+    n5=strtok(NULL,",");
+    n6=strtok(NULL,",");
+
+    port=atoi(n5)*256+atoi(n6);
+    return port;
 }

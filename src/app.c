@@ -14,11 +14,13 @@ int main(int argc, char * argv[]){
     //So argc has to be 2 (at least, we can feel need to have more arguments I guess)
 
     if(argc != 2){ //we can change it to < in the future
-        printf("ERROR");
+        printf("ERROR\n");
+        return 1;
     }
 
     if(strncmp("ftp://", argv[1], 6) !=0){ //it's not a ftp URL
-        printf("ERROR");
+        printf("ERROR\n");
+        return 1;
     }
 
     //We don't need to parse the whole url, just the part after ftp://
@@ -58,36 +60,67 @@ int main(int argc, char * argv[]){
     int code= getReply(socketfd);
     //Check if it's the code we wanted
     if(code!=SERVICE_READY){
+        printf("ERROR\n");
         return 1;
     }
 
     //Do login with user + pass
     //Send the value of user
     if(write_commands(socketfd,"user",user)<0){ //does user have to be in all caps?
+        printf("ERROR\n");
         return 1;
     }
     //Check if the code received was 331 or 230 (check RFC 959 page 50)
     code=getReply(socketfd);
     if(code!=USER_OKAY && code != USER_LOGGED_IN){
+       printf("ERROR\n");
         return 1;
     }
     
     //Send the value of password
     if(write_commands(socketfd,"pass",password)<0){
+       printf("ERROR\n");
         return 1;
     }
 
     //Check if the code received was 230
     code=getReply(socketfd);
     if(code != USER_LOGGED_IN){
+        printf("ERROR\n");
         return 1;
     }
 
     //Enter passive mode
+    if(write_commands(socketfd,"pasv","")<0){
+        printf("ERROR\n");
+        return 1;
+    }
+
+    /*
+    We need to check if the code reply is 227 + get the server's port where it
+awaits the connection
+    Example: 227 Entering Passive Mode (193,136,28,12,19,91)
+             server's IP: (193.136.28.12)
+             port= 19*256+91= 4955
+    */
+    int port;
+    if((port=getPort(socketfd))<0){
+        printf("ERROR\n");
+        return 1;
+    }
 
     //term_B socket
+    int socketBfd=start_socket(ip,port);
+    //Reply doesn't matter right now
+    //Retrieve file (in the first socket <=> term_A)
+    //Example: retr pub/kodi/timestamp.txt -->so basically it's retr + path
+    if(write_commands(socketfd,"retr",path)<0){
+       printf("ERROR\n");
+       return 1;
+    }
 
-    //Retrieve file
+    //There's two reply codes in this situation: 150 & 226
+    
 
 
 
