@@ -21,7 +21,7 @@ int start_socket(char*ip,int port){
      /*open a TCP socket*/
     if ((socketfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         perror("socket()");
-        return 1;
+        return -1;
     }
 
      /*connect to the server*/
@@ -29,7 +29,7 @@ int start_socket(char*ip,int port){
                 (struct sockaddr *) &server_addr,
                 sizeof(server_addr)) < 0) {
         perror("connect()");
-        return 1;
+        return -1;
     }
 
     return socketfd;
@@ -73,17 +73,17 @@ int write_commands(int socketfd,char*cmd,char*arg){
 
     if(write(socketfd,cmd,strlen(cmd))<0){
         printf(RED "ERROR - not able to write command\n");
-        return 1;
+        return -1;
     }
     if(arg!=""){
         if(write(socketfd,arg,strlen(arg))<0){
             printf(RED "ERROR - not able to write companion information to the command\n");
-            return 1;
+            return -1;
         }
     }
     if(write(socketfd,"\r\n",strlen("\r\n"))<0){
         printf(RED "ERROR - not able to write CRLF\n");
-        return 1;
+        return -1;
     }
     return 0;
 }
@@ -104,7 +104,7 @@ int getPort(int socketfd){
     breaks string str into a series of tokens using the delimiter delim.
 
     We can use this function to break the reply to get what we want.
-*/
+    */
     char*token,*n1,*n2,*n3,*n4,*n5,*n6;
     token=strtok(reply,"(");
     token=strtok(NULL,"(");
@@ -127,7 +127,7 @@ int transfer(int socketfd, char*path){
     FILE *fp=fopen(fileName,"wb");
     if(fp==NULL){
         printf(RED "ERROR - file doesn't exist\n");
-        return 1;
+        return -1;
     }
 
     //socket B has the data that we need to put in the file for A
@@ -136,7 +136,7 @@ int transfer(int socketfd, char*path){
     while((bytes=read(socketfd,buffer,BUFFER_LENGTH))>0){
         if(fwrite(buffer,bytes,1,fp)<0){
             printf(RED "ERROR - not able to write in file\n");
-            return 1;
+            return -1;
         }
     }
     fclose(fp);

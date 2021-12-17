@@ -1,6 +1,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+//CTF reply codes
 #define FILE_OKAY_DATA_SOON  150  //File status okay; about to open data connection
 #define SERVICE_CLOSING  221  //Service closing control connection
 #define SERVICE_READY  220  // Service ready for new user
@@ -10,7 +11,8 @@
 #define USER_LOGGED_IN  230  //User is logged in
 #define USER_OKAY  331  //User name okay
 #define NOT_LOGGED_IN  530  //Not logged in
-#define PORT  21
+
+#define PORT  21 //initial socket's port
 #define BUFFER_LENGTH 255
 #define PARAMETER_LENGTH 512
 
