@@ -7,7 +7,7 @@
 int parse_url(char* url, int size_url, char* user, char*password, char*host, char*path){
     /*url is ftp://[<user>:<password>@]<host>/<url-path>
     example: ftp://ftp.up.pt/pub/kodi/timestamp.txt where we don't have user and password here but we have host
-    and url-path. host is ftp.up.pt and the path is pub/kodi/timestamp.txt
+and url-path. host is ftp.up.pt and the path is pub/kodi/timestamp.txt
 
     We need to find a / to get the url-path
     We need to find a : to know when user stopped and password started
@@ -15,8 +15,6 @@ int parse_url(char* url, int size_url, char* user, char*password, char*host, cha
     
     Like the example showed us, there might not be an user and password defined
     */
-   printf("IN PARSE\n");
-   printf("%s\n",url);
    int i=0,u=0,p=0,h=0,pt=0;
    char rn;
    urlState state=USER;
@@ -68,9 +66,8 @@ int parse_url(char* url, int size_url, char* user, char*password, char*host, cha
           }   
     }
     else{ //In case it's an anonymous login
-        printf("Hello\n");
-        user="anonymous";
-        password="qualquer-password";
+        strcpy(user,"anonymous");
+        strcpy(password,"qualquer-password");
         state=HOST;
         while(1){
             if(i<size_url){

@@ -35,13 +35,14 @@ int start_socket(char*ip,int port){
     return socketfd;
 }
 
-int getReply(int socketfd){
+int getReply(int socketfd){ 
     //We stop reading when the line only consists on the reply code
     FILE*socket=fdopen(socketfd,"r");
     char*buffer;
     int code;
     size_t bytes=0;
     while(getline(&buffer,&bytes,socket)>0){
+        printf(RESET "%s",buffer);
         if(buffer[3]==' '){
             code=atoi(buffer);
             break;
@@ -54,8 +55,10 @@ int getCode(int socketfd,char*reply){
     char*str_code= (char*)malloc(4);
     int code;
     read(socketfd,reply,BUFFER_LENGTH);
+    printf(RESET "%s",reply);
     memcpy(str_code,reply,3);
     code=atoi(str_code);
+    free(str_code);
     return code;
 }
 
@@ -66,18 +69,20 @@ int write_commands(int socketfd,char*cmd,char*arg){
     A line feed means moving one line forward. The code is \n .
     A carriage return means moving the cursor to the beginning of the line. The code is \r .
     */
+
+
     if(write(socketfd,cmd,strlen(cmd))<0){
-        printf("ERROR\n");
+        printf(RED "ERROR - not able to write command\n");
         return 1;
     }
     if(arg!=""){
         if(write(socketfd,arg,strlen(arg))<0){
-            printf("ERROR\n");
+            printf(RED "ERROR - not able to write companion information to the command\n");
             return 1;
         }
     }
     if(write(socketfd,"\r\n",strlen("\r\n"))<0){
-        printf("ERROR\n");
+        printf(RED "ERROR - not able to write CRLF\n");
         return 1;
     }
     return 0;
@@ -90,7 +95,7 @@ int getPort(int socketfd){
 
     //Check if code is 227
     if(code != PASSIVE_MODE){
-        printf("ERROR\n");
+        printf(RED "ERROR - instead of code 227, indicating that we have successful gotten into passive mode, we got an error message\n");
         return -1;
     }
 
@@ -112,6 +117,7 @@ int getPort(int socketfd){
     n6=strtok(NULL,",");
 
     int port=atoi(n5)*256+atoi(n6);
+    free(reply);
     return port;
 }
 
@@ -120,7 +126,7 @@ int transfer(int socketfd, char*path){
     //Opening BINARY mode data connection-->so we need to open file in writing binary mode
     FILE *fp=fopen(fileName,"wb");
     if(fp==NULL){
-        printf("ERROR\n");
+        printf(RED "ERROR - file doesn't exist\n");
         return 1;
     }
 
@@ -129,7 +135,7 @@ int transfer(int socketfd, char*path){
     int bytes;
     while((bytes=read(socketfd,buffer,BUFFER_LENGTH))>0){
         if(fwrite(buffer,bytes,1,fp)<0){
-            printf("ERROR\n");
+            printf(RED "ERROR - not able to write in file\n");
             return 1;
         }
     }

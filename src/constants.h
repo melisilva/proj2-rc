@@ -14,4 +14,10 @@
 #define BUFFER_LENGTH 255
 #define PARAMETER_LENGTH 512
 
+//Adding a lil color for fun
+#define CYN   "\x1B[36m"
+#define RED   "\x1B[31m"
+#define MAG   "\x1B[35m"
+#define RESET "\x1B[0m"
+
 #endif
