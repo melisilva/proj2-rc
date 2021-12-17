@@ -97,7 +97,7 @@ int main(int argc, char * argv[]){
 
     /*
     We need to check if the code reply is 227 + get the server's port where it
-awaits the connection
+    awaits the connection
     Example: 227 Entering Passive Mode (193,136,28,12,19,91)
              server's IP: (193.136.28.12)
              port= 19*256+91= 4955

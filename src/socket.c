@@ -25,7 +25,7 @@ int start_socket(char*ip,int port){
     }
 
      /*connect to the server*/
-    if (connect(sockfd,
+    if (connect(socketfd,
                 (struct sockaddr *) &server_addr,
                 sizeof(server_addr)) < 0) {
         perror("connect()");
@@ -43,7 +43,7 @@ int getReply(int socketfd){
     size_t bytes=0;
     while(getline(&buffer,&bytes,socket)>0){
         if(buffer[3]==' '){
-            sccanf(buffer,"%d",code);
+            code=atoi(buffer);
             break;
         }
     }
@@ -55,7 +55,7 @@ int getCode(int socketfd,char*reply){
     int code;
     read(socketfd,reply,BUFFER_LENGTH);
     memcpy(str_code,reply,3);
-    sccanf(str_code,"%d",code);
+    code=atoi(str_code);
     return code;
 }
 
@@ -76,7 +76,7 @@ int write_commands(int socketfd,char*cmd,char*arg){
             return 1;
         }
     }
-    if(write(socketfd,'\r\n',strlen('\r\n'))<0){
+    if(write(socketfd,"\r\n",strlen("\r\n"))<0){
         printf("ERROR\n");
         return 1;
     }
@@ -85,8 +85,8 @@ int write_commands(int socketfd,char*cmd,char*arg){
 
 int getPort(int socketfd){
     //227 Entering Passive Mode (193,136,28,12,19,91)
-    char* reply=(char*)malloc(BUFFER_LENGTH);,
-    int code=getCode(socketfd);
+    char* reply=(char*)malloc(BUFFER_LENGTH);
+    int code=getCode(socketfd,reply);
 
     //Check if code is 227
     if(code != PASSIVE_MODE){

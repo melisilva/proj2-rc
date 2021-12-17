@@ -7,7 +7,7 @@
 int parse_url(char* url, int size_url, char* user, char*password, char*host, char*path){
     /*url is ftp://[<user>:<password>@]<host>/<url-path>
     example: ftp://ftp.up.pt/pub/kodi/timestamp.txt where we don't have user and password here but we have host
-and url-path. host is ftp.up.pt and the path is pub/kodi/timestamp.txt
+    and url-path. host is ftp.up.pt and the path is pub/kodi/timestamp.txt
 
     We need to find a / to get the url-path
     We need to find a : to know when user stopped and password started
