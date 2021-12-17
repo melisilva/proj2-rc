@@ -1,3 +1,6 @@
+#ifndef PARSE_H
+#define PARSE_H
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -10,3 +13,5 @@ typedef enum
 } urlState;
 
 int parse_url(char* url, int size_url, char* user, char*password, char*host, char*path);
+
+#endif

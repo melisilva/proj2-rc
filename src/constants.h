@@ -1,3 +1,6 @@
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
+
 #define FILE_OKAY_DATA_SOON  150  //File status okay; about to open data connection
 #define SERVICE_CLOSING  221  //Service closing control connection
 #define SERVICE_READY  220  // Service ready for new user
@@ -10,3 +13,5 @@
 #define PORT  21
 #define BUFFER_LENGTH 255
 #define PARAMETER_LENGTH 512
+
+#endif
