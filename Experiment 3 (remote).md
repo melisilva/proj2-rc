@@ -29,7 +29,7 @@ ip route 172.16.40.0 255.255.255.0 172.16.30.2
       It's *FastEthernet0/1* (ip nat outside).
 
 2. **How many IP addresses are available for *NATing*?**
-   One (172.16.254.45).
+   255 (mask is 255.255.255.0)
 3. **Is the router using overloading or not?**
    Yes.
 
@@ -87,7 +87,7 @@ ip route 172.16.40.0 255.255.255.0 172.16.30.2
 
 1. **(Cisco) How to configure a static route in a commercial router?**
 
-   To configure a static route in a commercial route, we need three values: <u>the IP of the network we are trying to access</u>, <u>its mask</u> and <u>the IP of the port to use as a gateway</u>. That way, the packet, once it arrives to the router, will be redirected to the correct adjacent router.
+   To configure a static route in a commercial router, we need three values: <u>the IP of the network we are trying to access</u>, <u>its mask</u> and <u>the IP of the port to use as a gateway</u>. That way, the packet, once it arrives to the router, will be redirected to the correct adjacent router.
 
    
 
@@ -119,7 +119,7 @@ ip route 172.16.40.0 255.255.255.0 172.16.30.2
 
 5. **(DNS) What packets are exchanged by DNS and what information is transported?**
 
-   The host sends a packet to the server. This packet has the hostname and will wait in the server until it receives its IP. After this, the receiver will send another packet with the host's IP.
+   The host sends a packet to the DNS server. This packet has the *hostname* of its intended destination and it will ask the server for the correspondent IP address. After this, the server will send the packet back to host with the correct IP address so the host can communicate with the packet's destination.
 
    
 
@@ -140,3 +140,4 @@ ip route 172.16.40.0 255.255.255.0 172.16.30.2
    **Remote Lab Answer:** We used a Linux VM to do this experiment. Because of this, the several routes that are present in it are due to the fact that in order to have a network connection inside the VM, there needs to exist routing of the main PC's network to it; other routes exist because of the type of applications installed in the VM that are basically some type of VM (for example docker).
 
    **FEUP Lab Answer**: After the experiment (and before we delete the routes), there are routes that connect every tux to each other. Before, there was a route, representing the connection to the Internet via LAN cable, a route due to *docker*.
+
