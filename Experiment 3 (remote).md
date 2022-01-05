@@ -41,9 +41,9 @@ c. Is the router using overloading or not? Yes
 
 ![DNS](screenshots/exp3/3.png)
 
-2. The destination address of the DNS query is 10.50.52.1
+3. The destination address of the DNS query is 10.50.52.1
 
-   ![DNS](screenshots/exp3/4.png)
+![DNS](screenshots/exp3/4.png)
 
 4. Destination was 9.9.9.9
 
