@@ -1,8 +1,8 @@
 # Experiment 3
 
-## Analyzing the Configuration File for a Cisco Router
+### Analyzing the configuration file for a Cisco router
 
-1. ##### Router Name:
+1. ##### Router name:
 
    gnu-rtrl
 
@@ -12,27 +12,42 @@
 
 3. ##### Configured IP addresses and netmask of ports
 
-   From FastEthernet0/0: 172.16.30.1 255.255.255.0
+​        From FastEthernet0/0: 172.16.30.1 255.255.255.0
 
-   From FastEthernet0/1: 172.16.254.45 255.255.255.0
+​        From FastEthernet0/1: 172.16.254.45 255.255.255.0
 
-4. **Configured Routes**
+#####    4. Configured routes
 
 ```
 ip route 0.0.0.0 0.0.0.0 172.16.254.1
 ip route 172.16.40.0 255.255.255.0 172.16.30.2
 ```
 
+###  NAT configuration on the router
 
+a. Which interface is connected to the Internet? It's FastEthernet0/1 (ip nat outside)
 
-##  NAT configuration on the router
+b. How many IP addresses are available for *NATing*? 172.16.254.45
 
-1. **Which interface is connected to the Internet?**
-   It's *FastEthernet0/1* (ip nat outside).
-2. **How many IP addresses are available for *NATing*?**
-   One (172.16.254.45).
-3. **Is the router using overloading or not?**
-   Yes.
+c. Is the router using overloading or not? Yes
 
-​        
+### DNS configs
+
+2. There aren't any DNS packets, only icmp.
+
+![DNS](screenshots/exp3/1.png)
+
+![DNS](screenshots/exp3/2.png)
+
+![DNS](screenshots/exp3/3.png)
+
+2. The destination address of the DNS query is 10.50.52.1
+
+   ![DNS](screenshots/exp3/4.png)
+
+4. Destination was 9.9.9.9
+
+   ![DNS](screenshots/exp3/5.png)
+
+   ![DNS](screenshots/exp3/6.png)
 
