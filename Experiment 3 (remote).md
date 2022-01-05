@@ -25,15 +25,17 @@ ip route 172.16.40.0 255.255.255.0 172.16.30.2
 
 ###  NAT configuration on the router
 
-a. Which interface is connected to the Internet? It's FastEthernet0/1 (ip nat outside)
+1. **Which interface is connected to the Internet?**
+      It's *FastEthernet0/1* (ip nat outside).
 
-b. How many IP addresses are available for *NATing*? 172.16.254.45
-
-c. Is the router using overloading or not? Yes
+2. **How many IP addresses are available for *NATing*?**
+   One (172.16.254.45).
+3. **Is the router using overloading or not?**
+   Yes.
 
 ### DNS configs
 
-2. There aren't any DNS packets, only icmp.
+2. There aren't any DNS packets, only *icmp*.
 
 ![DNS](screenshots/exp3/1.png)
 
@@ -41,11 +43,11 @@ c. Is the router using overloading or not? Yes
 
 ![DNS](screenshots/exp3/3.png)
 
-3. The destination address of the DNS query is 10.50.52.1
+3. The destination address of the DNS query is 10.50.52.1.
 
 ![DNS](screenshots/exp3/4.png)
 
-4. Destination was 9.9.9.9
+4. Destination was 9.9.9.9.
 
    ![DNS](screenshots/exp3/5.png)
 
