@@ -1,6 +1,6 @@
 # Experiment 3
 
-### Analyzing the configuration file for a Cisco router
+## Analyzing the configuration file for a Cisco router
 
 1. ##### Router name:
 
@@ -23,7 +23,7 @@ ip route 0.0.0.0 0.0.0.0 172.16.254.1
 ip route 172.16.40.0 255.255.255.0 172.16.30.2
 ```
 
-###  NAT configuration on the router
+##  NAT configuration on the router
 
 1. **Which interface is connected to the Internet?**
       It's *FastEthernet0/1* (ip nat outside).
@@ -33,7 +33,7 @@ ip route 172.16.40.0 255.255.255.0 172.16.30.2
 3. **Is the router using overloading or not?**
    Yes.
 
-### DNS configs
+## DNS configs
 
 2. There aren't any DNS packets, only *icmp*.
 
@@ -53,9 +53,9 @@ ip route 172.16.40.0 255.255.255.0 172.16.30.2
 
    ![DNS](screenshots/exp3/6.png)
 
-### Linux Routing
+## Linux Routing
 
-1. The default gateway is 10.0.2.1
+1. The default gateway is 10.0.2.1.
 
    ![DNS](screenshots/exp3/7.png)
 
@@ -63,11 +63,14 @@ ip route 172.16.40.0 255.255.255.0 172.16.30.2
 
    ![DNS](screenshots/exp3/8.png)
 
-3. As predicted the DNS server is not reachable, as no default route exists ![DNS](screenshots/exp3/9.png)
+3. As predicted the DNS server is not reachable, as no default route exists.
+   ![DNS](screenshots/exp3/9.png)
 
-4. Add a specific route for `104.17.113.188` to the gateway found on 1 (10.0.2.1) ![DNS](screenshots/exp3/10.png)
+4. Add a specific route for `104.17.113.188` to the gateway found on 1 (10.0.2.1) .
+   ![DNS](screenshots/exp3/10.png)
 
-5.  Wireshark logs with traceroute -n 104.17.113.188 ![DNS](screenshots/exp3/11.png)
+5. Wireshark logs with traceroute -n 104.17.113.188 .
+   ![DNS](screenshots/exp3/11.png)
 
 6. Wireshark logs with traceroute -n who.int
 
