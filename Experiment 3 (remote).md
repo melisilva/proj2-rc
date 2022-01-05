@@ -53,3 +53,33 @@ ip route 172.16.40.0 255.255.255.0 172.16.30.2
 
    ![DNS](screenshots/exp3/6.png)
 
+### Linux Routing
+
+1. The default gateway is 10.0.2.1
+
+   ![DNS](screenshots/exp3/7.png)
+
+2. Delete the default gateway entry
+
+   ![DNS](screenshots/exp3/8.png)
+
+3. As predicted the DNS server is not reachable, as no default route exists ![DNS](screenshots/exp3/9.png)
+
+4. Add a specific route for `104.17.113.188` to the gateway found on 1 (10.0.2.1) ![DNS](screenshots/exp3/10.png)
+
+5.  Wireshark logs with traceroute -n 104.17.113.188 ![DNS](screenshots/exp3/11.png)
+
+6. Wireshark logs with traceroute -n who.int
+
+   ![DNS](screenshots/exp3/12.png)
+
+   - ![DNS](screenshots/exp3/13.png)
+   - ![DNS](screenshots/exp3/14.png)
+   - ![DNS](screenshots/exp3/15.png)
+
+   
+
+7. ![DNS](screenshots/exp3/16.png)
+
+   
+
