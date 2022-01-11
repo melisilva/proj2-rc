@@ -51,7 +51,7 @@ W=1 in lab I321  					W= 2 in lab I320
    - Verify that the interface for the `172.16.31.254` IP address is configured as `inside`.
    - The `access-list 1 permit` has the networks `172.16.30.0/24` and `172.16.31.0/24` (in the access list command the mask is `0.0.0.7`, which is already correct on the file)
 3. Configuring the Router:
-   - Access the console for configuring the router through the serial port of tuxy???.
+   - Access the console for configuring the router through the serial port (Check to see if a tux is already connected to the Router's serial port.  If not connect the serial port of the router to one of the tuxes serial  port (see the [NetLab Network](https://moodle.up.pt/mod/page/view.php?id=89375) if needed))
    - Enter config mode (see below)
    - Copy-paste the file to the console.
    - Do `show running-config` to check the running configuration
@@ -474,3 +474,4 @@ or `# route add default gw 172.16.30.254 `
 From tux33, do ping 172.16.W.254
 
 From tux33, do ping 104.113.188
+
