@@ -67,3 +67,271 @@ W=1 in lab I321  					W= 2 in lab I320
    - Do a `ping` from tux33 to `172.16.W.254`.
    - Do a `ping` from tux33 to `104.17.113.188` (in the Internet).
 
+
+
+## Step by step - Linux Router
+
+### Step 1
+
+#### Fazer as ligações dos cabos
+
+##### Ligar Cabos
+
+```
+TUX33E0  -> Switch Porta 1 
+TUX32E0  -> Switch Porta 2
+TUX34E0  -> Switch Porta 3
+TUX34E1  -> Switch Porta 4
+```
+
+##### Configurar IP's
+
+tux33:
+
+```
+> ifconfig eth0 up
+> ifconfig eth0 172.16.30.1/24
+> ifconfig eth0 
+```
+
+tux34:
+
+```
+> ifconfig eth0 up
+> ifconfig eth0 172.16.30.254/24
+> ifconfig eth0 
+
+> ifconfig eth1 up
+> ifconfig eth1 172.16.31.253/24
+> ifconfig eth1 
+```
+
+tux32:
+
+```
+> ifconfig eth0 up
+> ifconfig eth0 172.16.31.1/24
+> ifconfig eth0 
+```
+
+| IP            | MAC  | tux/ether  |
+| ------------- | ---- | ---------- |
+| 172.16.31.1   |      | tux32 eth0 |
+| 172.16.30.1   |      | tux33 eth0 |
+| 172.16.30.254 |      | tux34 eth0 |
+| 172.16.31.253 |      | tux34 eth1 |
+
+##### Configurar VLAN's
+
+```
+TUX33S0  -> T3
+T4 -> Switch Console
+```
+
+Ligas um Cabo `S0`, like TUX33S0, à porta 33 da prateleira de cima (`T3`) e um cabo da porta `T4` a `switch console` e fazes como em [exp2](https://github.com/Ca-moes/RCOM/issues/63)
+
+Esta secção é para ser feita apenas uma vez, num tux à escolha, a partir do terminal GtkTerm, sem necessidade de alterar cabos.
+
+VLAN 0:
+
+- tux33 eth0 -> port 1
+- tux34 eth0 -> port 3
+
+VLAN 1:
+
+- tux32 eth0 -> port 2
+- tux34 eth1 -> port 4
+
+
+
+###### Instruções Detalhadas
+
+Dar login no switch (slide 48):
+
+```
+»enable
+»password: ****** (deve ser 8nortel, olha para a prateleira e confirma)
+```
+
+Criar VLAN (vlan30) (Slide 44):
+
+```
+»configure terminal
+»vlan 30
+»end
+»show vlan id 30
+```
+
+Add port 1 to vlan 30 (Slide 44):
+
+```
+»configure terminal
+»interface fastethernet 0/1             (x/y ;  x é o bloco, como só há um , o bloco é 0; y é o port mostrado no switch)
+»switchport mode access
+»switchport access vlan 30
+»end
+```
+
+Add port 3 to vlan 30 (Slide 44):
+
+```
+»configure terminal
+»interface fastethernet 0/3             
+»switchport mode access
+»switchport access vlan 30
+»end
+```
+
+Criar VLAN (vlan31) (Slide 44):
+
+```
+»configure terminal
+»vlan 31
+»end
+»show vlan id 31
+```
+
+Add port 2 to vlan 31 (Slide 44):
+
+```
+»configure terminal
+»interface fastethernet 0/2             
+»switchport mode access
+»switchport access vlan 31
+»end
+```
+
+Add port 4 to vlan 31 (Slide 44):
+
+```
+»configure terminal
+»interface fastethernet 0/4             
+»switchport mode access
+»switchport access vlan 31
+»end
+```
+
+No final verificar se está tudo correto com:
+
+```
+»show vlan
+```
+
+Também podes verificar com:
+
+```
+»show running-config interface fastethernet 0/1
+»show interfaces fastethernet 0/1 switchport
+```
+
+testar com números de portas diferentes
+
+##### Enable IP forwarding & Disable ICMP echo-ignore-broadcast
+
+Passa para o tux34 e faz os seguintes comando no terminal
+
+```
+echo 1 > /proc/sys/net/ipv4/ip_forward
+echo 0 > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
+```
+
+### Step 2
+
+Caso ainda não o tenhas feito, guarda os valores IP e MAC das portas eth0 e eth1 do tux34.
+
+### Step 3
+
+  **In tux33**: `# ip route add 172.16.31.0/24 via 172.16.30.254` 
+or `# route add -net 172.16.31.0/24 gw 172.16.30.254 `
+        **In tux32**: `# ip route add 172.16.30.0/24 via 172.16.31.253` 
+or `# route add -net 172.16.30.0/24 gw 172.16.31.253`
+
+Testa pingar o tux32 a partir do tux33 e o oposto para ver se chegam um ao outro.
+
+```
+Em tux33:
+ping 172.16.31.1
+
+Em tux32:
+ping 172.16.30.1
+```
+
+Caso haja erros:
+
+- verifica as routes em cada tux com `route -n` para ficarem [desta forma](https://imgur.com/a/IxWSdWm):
+
+**tux32**:
+
+| Destination | Gateway       | Genmask       | Flags | Metric | Ref  | Use  | Iface |
+| ----------- | ------------- | ------------- | ----- | ------ | ---- | ---- | ----- |
+| 172.16.30.0 | 172.16.31.253 | 255.255.255.0 | UG    | 0      | 0    | 0    | eth0  |
+| 172.16.31.0 | 0.0.0.0       | 255.255.255.0 | U     | 0      | 0    | 0    | eth0  |
+
+**tux33**:
+
+| Destination | Gateway       | Genmask       | Flags | Metric | Ref  | Use  | Iface |
+| ----------- | ------------- | ------------- | ----- | ------ | ---- | ---- | ----- |
+| 172.16.30.0 | 0.0.0.0       | 255.255.255.0 | U     | 0      | 0    | 0    | eth0  |
+| 172.16.31.0 | 172.16.31.254 | 255.255.255.0 | UG    | 0      | 0    | 0    | eth0  |
+
+**tux34**:
+
+| Destination | Gateway | Genmask       | Flags | Metric | Ref  | Use  | Iface |
+| ----------- | ------- | ------------- | ----- | ------ | ---- | ---- | ----- |
+| 172.16.30.0 | 0.0.0.0 | 255.255.255.0 | U     | 0      | 0    | 0    | eth0  |
+| 172.16.31.0 | 0.0.0.0 | 255.255.255.0 | U     | 0      | 0    | 0    | eth1  |
+
+- verifica os ips de cada tux para ter a certeza que estão corretos
+- liga-te à consola do switch e verifica se as vlans estão corretamente configuradas
+
+### Step 4
+
+Fazer `route -n` em cada 1 dos 3 tuxs. Tens [no Ponto 5 do Guião 1](https://github.com/Ca-moes/RCOM/issues/62) o significado do que vai resultar.
+
+### Step 5
+
+Passar para tux33. Ligar o WireShark e começar a capturar pacotes na eth0
+
+### Step 6
+
+A partir do tux33:
+
+- pingar a eth0 do tux34 - `ping 172.16.30.254`
+- pingar a eth1 do tux34 - `ping 172.16.31.253`
+- pingar a eth0 do tux32 - `ping 172.16.31.1`
+
+Para cada um verificar a conectividade
+
+### Step 7
+
+Para a captura no tux33 e guardar logs como `exp3_step7.pcapng`
+
+### Step 8
+
+- Passar para o tux34.
+- Ligar duas instâncias de WireShark. Uma para o eth0 e outra para o eth1.
+- Começar a capturar na eth0 e começar a capturar na eth1.
+
+### Step 9
+
+- No tux34, apagar a tabela ARP e verificar se estão limpas
+
+```
+> arp -a [ver quais são os ips que se podem apagar]
+> arp -d 172.16.30.254 [um dos ips, fazer isto até se verificar o que está abaixo]
+> arp -a [tem de retornar nada]
+```
+
+- Trocar para o tux32 e fazer o mesmo
+- Trocar para o tux33 e fazer o mesmo
+
+### Step 10
+
+No tux33 começar a pingar o tux32 `ping 172.16.31.1` e ao fim de 10 pings fazer CTRL+C.
+
+### Step 11
+
+Passar para tux34, parar as capturas e guardar os ficheiros como: `exp3_step11_eth0.pcapng` e `exp3_step11_eth1.pcapng`
+
+
+
