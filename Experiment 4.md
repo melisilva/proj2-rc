@@ -335,3 +335,37 @@ Passar para tux34, parar as capturas e guardar os ficheiros como: `exp3_step11_e
 
 
 
+## Step by step - Cisco Router
+
+### Step 1
+
+Do router>enable
+
+router# configure terminal
+
+Enter this info (one per line)
+
+End with CTRL + Z
+
+router(config)# exit
+
+Do show running-config
+
+Copy...
+
+### Step 2
+
+From Cisco router, do:
+
+1. ping 172.16.31.254
+2. ping 172.16.W.254
+3. ping 104.17.113.188
+
+### Step 3
+
+**In tuxy2 and tuxy4**: `# ip route add default via 172.16.30.254` 
+or `# route add default gw 172.16.30.254 `
+
+From tux33, do ping 172.16.W.254
+
+From tux33, do ping 104.113.188
