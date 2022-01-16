@@ -105,3 +105,25 @@ recebem respostas: Para "parlamento.pt"o endereço IPv4 é ... e o endereço IPv
 
 Esta experiência teve como base as experiências 2 e 3, utilizamos as configurações estudadas na experiência anterior e o conhecimento de como criar VLANs adquirido na experiência 2 para criar VLANs comunicáveis entre si, utilizando o tux34 como router. Através das configurações estudadas, também configuramos um router comercial, que conectava a rede criada à internet. 
 
+Adicionamos rotas para haver ligação entre tux32 e tux33, seguindo a informação proporcionada na imagem presente no moodle. Caso o tux33 queira enviar dados à rede 172.16.30.0/24, estes devem ser redirecionados para a rede 172.16.30.254, isto é feito com recurso a gateways (`route add -net 172.16.31.0/24 gw 172.16.30.254`). Da mesma forma, tux32 manda dados à rede 172.16.30.0/24, estes são redirecionados para o endereço 172.16.31.253 (`route add -net 172.16.30.0/24 gw 172.16.31.253`). É necessário ativar a opção de IP forward no tux34 para que este possa atuar como router: 
+
+```
+echo 1 > /proc/sys/net/ipv4/ip_forward
+echo 0 > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
+```
+
+As rotas podem ser vistas na *forwarding table* através do comando, `route -n`. Esta tabela ajuda a perceber se as configurações foram feitas corretamente, para além de dar outras informações:
+
+- Destination: IP de destino da informação;
+- Gateway: IP do computador para o qual a informação deve ser enviada para atingir a rede de destino;
+- GenMask: máscara de rede;
+- Interface: interface de rede do computador.
+
+Tal como fizemos na experiência 2, também aqui apagamos as tabelas ARP de todos os tuxes. Ao contrário do que aconteceu nessa experiência, quando é efetuado um `ping` do tux33 para o tux32, obtemos uma resposta, já que o tux34 está a atuar como router. No início do `ping`, podemos ver através dos logs do Wireshark (que está a ser executado no tux34), o tux33 envia pacotes ARP para conhecer os endereços MAC de tux32 e 34 e o tux34 envia um pacote ARP para conhecer o endereço MAC de tux32 de modo a reenviar-lhe a informação de tux33.
+
+Mais uma vez, depois de enviados os pacotes ARP e conhecidos os endereços MAC de todos os tuxes, o `ping` passa a enviar pacotes ICMP, o interessante aqui são os endereços IP e MAC presentes nestes pacotes. 
+
+**Imagem**
+
+O pacote tem como IP de origem, 172.16.30.1 (tux33) e como destino, o IP 172.16.31.1 (tux32) e possui o endereço MAC de tux33 como origem, no entanto, o seu endereço MAC de destino é o MAC de tux34 e não o de tux32 (o que faz sentido, já que a informação que parte de tux33 vai para tux34 antes de chegar a tux32). O endereço IP não é alterado, o endereço MAC muda consoante o computador para o qual está a ser enviado, pois como estudamos anteriormente, o MAC é o endereço físico.
+
