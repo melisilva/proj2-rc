@@ -42,6 +42,31 @@ Ocasionalmente foi observado o envio de tramas *loopback* pelo emissor, esta é 
 
 #### Experiência 2 - Virtual LANs
 
+Nesta experiência criamos duas LANs virtuais (VLAN30 e VLAN31) no switch, que não possuíam conexão entre si, e observar a conectividade entre os tuxes, depois de os configurar em cada uma das subredes.
+
+ Para configurar a vlan30, tivemos de utilizar o programa GKTERM, que estava ligado ao switch:
+
+```
+configure terminal
+vlan 30
+end 
+show vlan id 30
+```
+
+De seguida adicionamos as portas do switch (estes valores variam consoante os cabos ligados). Ligamos o tux33E0 à porta 1:
+
+```
+configure terminal
+interface fastethernet 0/1             
+switchport mode access
+switchport access vlan 30
+end
+```
+
+Temos de associar dois tuxes portas à vlan30 (tux33 e tux34), enquanto que para vlan31 só precisamos de tux32. Testamos a conectividade entre os tuxes com o recurso ao comando `ping`, este teve sucesso entre os tuxes 33 e 34 (o que seria de esperar já que se encontram na mesma subrede), no entanto não houve resposta no caso do tux33 e tux32, uma vez que não existe nenhuma routa entre VLAN's. 
+
+Efetuamos um ping em broadcast em tux33, `ping -b 172.16.30.255`, que não obteve resposta, uma vez que em tux34 está ativado o comando`echo-ignore-broadcast` e o tux32 não faz parte da rede local de tux33. Concluímos que existem dois domínios de broadcast que correspondem às duas subredes, VLAN 30 (172.16.30.255) e VLAN 31 (172.16.31.255).
+
 #### Experiência 3 - Configuração do Router - Remota
 
 #### Experiência 4 - Configuração do Router - FEUP
