@@ -69,4 +69,39 @@ Efetuamos um ping em broadcast em tux33, `ping -b 172.16.30.255`, que não obtev
 
 #### Experiência 3 - Configuração do Router - Remota
 
+Esta experiência foi feita remotamente e teve como objetivos analisar o ficheiro de configuração de um Router Cisco, testar entradas DNS e configurar rotas na máquina local (utilizada uma máquina virtual Linux).
+
+Começamos por analisar o ficheiro de configuração do Router Cisco, no qual está presente NAT (Network Address Translation), mecanismo implementado em routers que substitui os endereços IP locais nos pacotes por um endereço IP público de forma a se conseguir estabelecer uma ligação fora da rede. Sendo assim, o router que implementa o NAT torna-se responsável por encaminhar todos os pacotes para o endereço correto, dentro ou fora da rede local. Desta forma para configurar uma rede estática num router comercial precisamos do endereço IP da network que estamos a tentar aceder, da sua máscara e do endereço IP que estamos a usar como gateway. É possível configurar NAT num router comercial através dos comandos disponíveis nos Anexos ??:
+
+```
+conf t
+interface gigabitethernet 0/0 
+ip address 172.16.y1.254 255.255.255.0
+no shutdown
+ip nat inside
+exit
+interface gigabitethernet 0/1
+ip address 172.16.1.y9 255.255.255.0
+no shutdown
+ip nat outside
+exit
+ip nat pool ovrld 172.16.1.y9 172.16.1.y9 prefix 24
+ip nat inside source list 1 pool ovrld overload
+access-list 1 permit 172.16.y0.0 0.0.0.7
+access-list 1 permit 172.16.y1.0 0.0.0.7
+ip route 0.0.0.0 0.0.0.0 172.16.1.254
+ip route 172.16.y0.0 255.255.255.0 172.16.y1.253
+end
+```
+
+Para configurar um serviço de DNS numa máquina só é necessário adicionar uma linha ao ficheiro "etc/resolv.conf" contendo o nome do servidor a usar e o endereço IP do mesmo, após este estar configurado, aparecerão pacotes relativos ao DNS.
+
+Ao realizar um ping são enviados 2 pacotes DNS com dois pedidos: Adress
+Mapping Record (A), para pedir o endereço IPv4 do host e IP Version 6
+Address Record (AAAA) para pedir o endereço IPv6. Ambos estes pedidos
+recebem respostas: Para "parlamento.pt"o endereço IPv4 é ... e o endereço IPv6 é ... **(refazer isto para obter fotos melhores e respostas)**.
+
 #### Experiência 4 - Configuração do Router - FEUP
+
+Esta experiência teve como base as experiências 2 e 3, utilizamos as configurações estudadas na experiência anterior e o conhecimento de como criar VLANs adquirido na experiência 2 para criar VLANs comunicáveis entre si, utilizando o tux34 como router. Através das configurações estudadas, também configuramos um router comercial, que conectava a rede criada à internet. 
+
