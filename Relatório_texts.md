@@ -130,8 +130,8 @@ Mais uma vez, depois de enviados os pacotes ARP e conhecidos os endereços MAC d
 
 O pacote tem como IP de origem, 172.16.30.1 (tux33) e como destino, o IP 172.16.31.1 (tux32) e possui o endereço MAC de tux33 como origem, no entanto, o seu endereço MAC de destino é o MAC de tux34 e não o de tux32 (o que faz sentido, já que a informação que parte de tux33 vai para tux34 antes de chegar a tux32). O endereço IP não é alterado, o endereço MAC muda consoante o computador para o qual está a ser enviado, pois como estudamos anteriormente, o MAC é o endereço físico.
 
-Aproveitando as VLAN's configuradas para a primeira parte desta experiência, avançamos para a configuração de um router Cisco. Primeiramente, confirmamos que a interface GE0 do router Cisco estava conectada ao router do laboratório e atribuímos-lhe o IP 172.16.1.39 e que a interface GE1 estava conectada ao switch, é possível ver estas configurações nos Anexos ??
+Avançamos para a configuração de um router Cisco, confirmamos que a interface GE0 do router Cisco estava conectada ao router do laboratório e atribuímos-lhe o IP 172.16.1.39 e que a interface GE1 estava conectada ao switch, é possível ver estas configurações nos Anexos ??
 
 Temos ainda de configurar em tux32 e 34, uma default gateway para o router Cisco: `route add default gw 172.16.30.254`(endereço IP do router ligado a VLAN31).
 
- 
+ Através da configuração do router com NAT, os pacotes mandados por tux33 primeiro para 172.16.1.0/24 e depois para 104.17.113.188 (na Internet), os dados vão do tux33 para estes endereços IP, pois o router encaminha todos os pacotes para o endereço correto, dentro ou fora da rede local.
