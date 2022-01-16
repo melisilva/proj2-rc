@@ -12,9 +12,9 @@
 
 int main(int argc, char * argv[]){
     //It should take an argument that adopts the URL syntax
-    //So argc has to be 2 (at least, we can feel need to have more arguments I guess)
+    //So argc has to be 2 
 
-    if(argc != 2){ //we can change it to < in the future
+    if(argc != 2){ 
         printf(RED "ERROR - you need to provide an URL in order for this app to work\n");
         return 1;
     }
@@ -31,7 +31,7 @@ int main(int argc, char * argv[]){
 
     //Need to parse the URL to get the user, password, host and url-path
     
-    char* user= (char*)malloc(PARAMETER_LENGTH); //might need to make this a constant?
+    char* user= (char*)malloc(PARAMETER_LENGTH); 
     char* password= (char*)malloc(PARAMETER_LENGTH);
     char*host= (char*)malloc(PARAMETER_LENGTH);
     char*path=(char*)malloc(PARAMETER_LENGTH);
@@ -144,7 +144,6 @@ awaits the connection
         return 1;
     }    
 
-    //Do we need to write the command quit or can we just close the sockets?
     close(socketAfd);
     close(socketBfd);
     free(reply);
