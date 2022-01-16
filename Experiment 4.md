@@ -474,3 +474,34 @@ From tux33, do ping 172.16.1.254
 
 From tux33, do ping 104.113.188
 
+
+
+**Notas para segunda parte da experiência**
+
+1. Ligar cabos
+
+2. Configurar router cisco
+
+3. Configurar IP's
+
+4. Configurar VLANs--->adicionar router à VLAN31 (ter atenção aos cabos)
+
+5. Fazer o enable do IP forwarding & disable ICMP echo-ignore-broadcast
+
+6. Adicionar as routes
+
+   **In tux33**: `# ip route add 172.16.31.0/24 via 172.16.30.254` 
+   or `# route add -net 172.16.31.0/24 gw 172.16.30.254 `
+           **In tux32**: `# ip route add 172.16.30.0/24 via 172.16.31.253` 
+   or `# route add -net 172.16.30.0/24 gw 172.16.31.253`
+
+7. Testar conectividade entre tux33 e tux32 (para ver que está tudo bem)
+
+8. Adicionar default routes
+
+   **In tux32 and tux34**: `# ip route add default via 172.16.30.254` 
+   or `# route add default gw 172.16.30.254 `
+
+9. Fazer os pings
+
+   

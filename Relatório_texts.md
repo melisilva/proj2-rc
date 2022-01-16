@@ -74,23 +74,26 @@ Esta experiência foi feita remotamente e teve como objetivos analisar o ficheir
 Começamos por analisar o ficheiro de configuração do Router Cisco, no qual está presente NAT (Network Address Translation), mecanismo implementado em routers que substitui os endereços IP locais nos pacotes por um endereço IP público de forma a se conseguir estabelecer uma ligação fora da rede. Sendo assim, o router que implementa o NAT torna-se responsável por encaminhar todos os pacotes para o endereço correto, dentro ou fora da rede local. Desta forma para configurar uma rede estática num router comercial precisamos do endereço IP da network que estamos a tentar aceder, da sua máscara e do endereço IP que estamos a usar como gateway. É possível configurar NAT num router comercial através dos comandos disponíveis nos Anexos ??:
 
 ```
+#Configurar porta de entrada
 conf t
-interface gigabitethernet 0/0 
-ip address 172.16.y1.254 255.255.255.0
+interface gigabitethernet 0/1 (porta ligada ao switch)
+ip address 172.16.31.254 255.255.255.0
 no shutdown
 ip nat inside
 exit
-interface gigabitethernet 0/1
-ip address 172.16.1.y9 255.255.255.0
+
+#Configurar porta de saída
+interface gigabitethernet 0/0 (porta ligada à internet)
+ip address 172.16.1.39 255.255.255.0
 no shutdown
 ip nat outside
 exit
-ip nat pool ovrld 172.16.1.y9 172.16.1.y9 prefix 24
+ip nat pool ovrld 172.16.1.39 172.16.1.39 prefix 24
 ip nat inside source list 1 pool ovrld overload
-access-list 1 permit 172.16.y0.0 0.0.0.7
-access-list 1 permit 172.16.y1.0 0.0.0.7
+access-list 1 permit 172.16.30.0 0.0.0.7
+access-list 1 permit 172.16.31.0 0.0.0.7
 ip route 0.0.0.0 0.0.0.0 172.16.1.254
-ip route 172.16.y0.0 255.255.255.0 172.16.y1.253
+ip route 172.16.30.0 255.255.255.0 172.16.31.253
 end
 ```
 
@@ -127,3 +130,8 @@ Mais uma vez, depois de enviados os pacotes ARP e conhecidos os endereços MAC d
 
 O pacote tem como IP de origem, 172.16.30.1 (tux33) e como destino, o IP 172.16.31.1 (tux32) e possui o endereço MAC de tux33 como origem, no entanto, o seu endereço MAC de destino é o MAC de tux34 e não o de tux32 (o que faz sentido, já que a informação que parte de tux33 vai para tux34 antes de chegar a tux32). O endereço IP não é alterado, o endereço MAC muda consoante o computador para o qual está a ser enviado, pois como estudamos anteriormente, o MAC é o endereço físico.
 
+Aproveitando as VLAN's configuradas para a primeira parte desta experiência, avançamos para a configuração de um router Cisco. Primeiramente, confirmamos que a interface GE0 do router Cisco estava conectada ao router do laboratório e atribuímos-lhe o IP 172.16.1.39 e que a interface GE1 estava conectada ao switch, é possível ver estas configurações nos Anexos ??
+
+Temos ainda de configurar em tux32 e 34, uma default gateway para o router Cisco: `route add default gw 172.16.30.254`(endereço IP do router ligado a VLAN31).
+
+ 
