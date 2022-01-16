@@ -21,3 +21,27 @@ Mandamos o comando "retr" + **path** através primeira *socket* para pedir ao se
 #### Caso de sucesso
 
 A nossa aplicação foi testada em várias condições: modo anónimo, modo não anónimo, vários servidores FTP. Um exemplo de um deste testes pode ser visualizado nos Anexos.
+
+## Parte 2 - Configuração da *Network* e Análise
+
+#### Experiência 1 - Configuração IP
+
+Esta experiência tem como objetivo interligar os computadores tux33 e tux34 (trabalhamos na bancada 3) na mesma subrede, através de um switch. Para assim, foi necessário perceber o que são pacotes ARP, para que servem, que tipo de pacotes é que o comando *ping* gera e o que são endereços MAC e IP.
+
+Usamos o comando `ifconfig` para configurar os endereços IP's de cada um dos tuxes e o comando `route` para estabelecer rotas entre eles. Testamos a conectividade entre os dois através de `ping`, depois de eliminar a tabela ARP dos tuxes (`arp -d`), utilizamos este comando de novo e analisamos o resultado com o Wireshark.
+
+Já que eliminamos a tabela ARP, o protocolo ARP (Address Resolution Protocol) foi executado. Este mapeia um endereço IP (identificador público que cada máquina precisa de usar numa rede para poder comunicar com outras) a um endereço MAC da máquina na rede local (endereço físico), para depois ser possível estabelecer ligações.
+
+Quando o tux33 tenta enviar um pacote ao tux34, como não sabe o endereço MAC deste, envia um protocolo ARP em broadcast  (para toda a rede local) com os seus endereços IP (172.16.30.1) e MAC (00:21:5a:61:30:63). O endereço MAC do destinatário, como não o conhece, tem o valor de 00:00:00:00:00:00. O computador da rede local que se identificar pelo endereço IP de destino enviado pelo pedido, irá responder ao tux33 com outro protocolo ARP, dizendo-lhe o seu endereço MAC, é isto que observamos com o tux34. 
+
+Depois de descoberto o endereço MAC do destinatário, `ping` começa a gerar pacotes ICMP (Internet Control Message Protocol), para a comunicação entre os tuxes.
+
+Conseguimos determinar o tipo de trama Ethernet recebida, analisando o cabeçalho do pacote:  se tiver o valor 0x0800, significa que a trama é do tipo IP. Caso o valor seja 0x0806, então a trama é do tipo ARP. Caso a trama seja do tipo IP, temos de analisar o seu IP header, se este tiver o valor igual a 1, então a trama é do tipo ICMP. Podemos também determinar o comprimento da trama através do Wireshark.
+
+Ocasionalmente foi observado o envio de tramas *loopback* pelo emissor, esta é uma interface virtual que está sempre disponível e é sempre possível de atingir enquanto pelo menos uma interface IP no *switch* seja operacional. Esta interface é importante porque permite ao computador receber respostas de si próprio, sendo útil para *debugging* já que podemos sempre dar *ping* ao seu endereço IP. 
+
+#### Experiência 2 - Virtual LANs
+
+#### Experiência 3 - Configuração do Router - Remota
+
+#### Experiência 4 - Configuração do Router - FEUP
