@@ -139,8 +139,8 @@ VLAN 0:
 
 VLAN 1:
 
-- tux32 eth0 -> port 2
-- tux34 eth1 -> port 4
+- tux32 eth0 -> port 13
+- tux34 eth1 -> port 14
 
 
 
@@ -166,7 +166,7 @@ Add port 1 to vlan 30 (Slide 44):
 
 ```
 »configure terminal
-»interface fastethernet 0/1             (x/y ;  x é o bloco, como só há um , o bloco é 0; y é o port mostrado no switch)
+»interface fastethernet 0/1            
 »switchport mode access
 »switchport access vlan 30
 »end
@@ -191,21 +191,21 @@ Criar VLAN (vlan31) (Slide 44):
 »show vlan id 31
 ```
 
-Add port 2 to vlan 31 (Slide 44):
+Add port 13 to vlan 31 (Slide 44):
 
 ```
 »configure terminal
-»interface fastethernet 0/2             
+»interface fastethernet 0/13             
 »switchport mode access
 »switchport access vlan 31
 »end
 ```
 
-Add port 4 to vlan 31 (Slide 44):
+Add port 14 to vlan 31 (Slide 44):
 
 ```
 »configure terminal
-»interface fastethernet 0/4             
+»interface fastethernet 0/14            
 »switchport mode access
 »switchport access vlan 31
 »end
@@ -260,33 +260,9 @@ Caso haja erros:
 
 - verifica as routes em cada tux com `route -n` para ficarem [desta forma](https://imgur.com/a/IxWSdWm):
 
-**tux32**:
-
-| Destination | Gateway       | Genmask       | Flags | Metric | Ref  | Use  | Iface |
-| ----------- | ------------- | ------------- | ----- | ------ | ---- | ---- | ----- |
-| 172.16.30.0 | 172.16.31.253 | 255.255.255.0 | UG    | 0      | 0    | 0    | eth0  |
-| 172.16.31.0 | 0.0.0.0       | 255.255.255.0 | U     | 0      | 0    | 0    | eth0  |
-
-**tux33**:
-
-| Destination | Gateway       | Genmask       | Flags | Metric | Ref  | Use  | Iface |
-| ----------- | ------------- | ------------- | ----- | ------ | ---- | ---- | ----- |
-| 172.16.30.0 | 0.0.0.0       | 255.255.255.0 | U     | 0      | 0    | 0    | eth0  |
-| 172.16.31.0 | 172.16.31.254 | 255.255.255.0 | UG    | 0      | 0    | 0    | eth0  |
-
-**tux34**:
-
-| Destination | Gateway | Genmask       | Flags | Metric | Ref  | Use  | Iface |
-| ----------- | ------- | ------------- | ----- | ------ | ---- | ---- | ----- |
-| 172.16.30.0 | 0.0.0.0 | 255.255.255.0 | U     | 0      | 0    | 0    | eth0  |
-| 172.16.31.0 | 0.0.0.0 | 255.255.255.0 | U     | 0      | 0    | 0    | eth1  |
-
-- verifica os ips de cada tux para ter a certeza que estão corretos
-- liga-te à consola do switch e verifica se as vlans estão corretamente configuradas
-
 ### Step 4
 
-Fazer `route -n` em cada 1 dos 3 tuxs. Tens [no Ponto 5 do Guião 1](https://github.com/Ca-moes/RCOM/issues/62) o significado do que vai resultar.
+Fazer `route -n` em cada 1 dos 3 tuxs
 
 ### Step 5
 
@@ -318,7 +294,7 @@ Para a captura no tux33 e guardar logs como `exp3_step7.pcapng`
 
 ```
 > arp -a [ver quais são os ips que se podem apagar]
-> arp -d 172.16.30.254 [um dos ips, fazer isto até se verificar o que está abaixo]
+> arp -d um dos ips
 > arp -a [tem de retornar nada]
 ```
 
@@ -401,14 +377,14 @@ interface FastEthernet0/0
  speed auto
 !
 interface FastEthernet0/1
- ip address 172.16.W.39 255.255.255.0
+ ip address 172.16.1.39 255.255.255.0
  ip nat outside
  ip virtual-reassembly
  duplex auto
  speed auto
 !
 ip forward-protocol nd
-ip route 0.0.0.0 0.0.0.0 172.16.W.254
+ip route 0.0.0.0 0.0.0.0 172.16.1.254
 ip route 172.16.30.0 255.255.255.0 172.16.31.253
 ip http server
 ip http access-class 23
@@ -417,7 +393,7 @@ ip http secure-server
 ip http timeout-policy idle 60 life 86400 requests 10000
 !
 !
-ip nat pool ovrld 172.16.W.39 172.16.W.39 prefix-length 24
+ip nat pool ovrld 172.16.1.39 172.16.1.39 prefix-length 24
 ip nat inside source list 1 pool ovrld overload
 !
 access-list 1 permit 172.16.30.0 0.0.0.7
@@ -458,12 +434,35 @@ Do `show running-config`
 
 Do `copy running-config startup-config`
 
+```
+conf t
+interface gigabitethernet 0/0 
+ip address 172.16.31.254 255.255.255.0
+no shutdown
+ip nat inside
+exit
+interface gigabitethernet 0/1
+ip address 172.16.1.39 255.255.255.0
+no shutdown
+ip nat outside
+exit
+ip nat pool ovrld 172.16.1.39 172.16.1.39 prefix 24
+ip nat inside source list 1 pool ovrld overload
+access-list 1 permit 172.16.30.0 0.0.0.7
+access-list 1 permit 172.16.31.0 0.0.0.7
+ip route 0.0.0.0 0.0.0.0 172.16.1.254
+ip route 172.16.30.0 255.255.255.0 172.16.3y1.253
+end
+```
+
+
+
 ### Step 2
 
 From Cisco router, do:
 
 1. ping 172.16.31.254
-2. ping 172.16.W.254
+2. ping 172.16.1.254
 3. ping 104.17.113.188
 
 ### Step 3
@@ -471,7 +470,7 @@ From Cisco router, do:
 **In tuxy2 and tuxy4**: `# ip route add default via 172.16.30.254` 
 or `# route add default gw 172.16.30.254 `
 
-From tux33, do ping 172.16.W.254
+From tux33, do ping 172.16.1.254
 
 From tux33, do ping 104.113.188
 
