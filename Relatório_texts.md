@@ -102,7 +102,7 @@ Para configurar um serviço de DNS numa máquina só é necessário adicionar um
 Ao realizar um ping são enviados 2 pacotes DNS com dois pedidos: Adress
 Mapping Record (A), para pedir o endereço IPv4 do host e IP Version 6
 Address Record (AAAA) para pedir o endereço IPv6. Ambos estes pedidos
-recebem respostas: Para "parlamento.pt"o endereço IPv4 é ... e o endereço IPv6 é ... **(refazer isto para obter fotos melhores e respostas)**.
+recebem respostas: Para "parlamento.pt"o endereço IPv4 é 88.157.195.115 e o endereço IPv6 é ... 
 
 #### Experiência 4 - Configuração do Router - FEUP
 

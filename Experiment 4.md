@@ -4,25 +4,25 @@
 
 ### Steps 
 
-1. Connect a cable from tux34/`eth1` to the switch and place it in vlan31 
+1. Connect a cable from tuxy4/`eth1` to the switch and place it in vlan31 
 2. Verify the VLANs on the switch (`show vlan brief`).
-3. Configure tux34/`eth1`'s IP address as per the figure (`172.16.31.253/24`).
-4. Enable IP forwarding On tux34 .
-5. Disable ICMP echo ignore broadcast On tux34 
-6. Check the MAC addresses and IP addresses in tux34 for `eth0` and `eth1`.
-7. Configure the routes in tux33 and tux32 so that they can reach each other.
-           **In tux33**: `# ip route add 172.16.31.0/24 via 172.16.30.254` 
-   or `# route add -net 172.16.31.0/24 gw 172.16.30.254 `
-           **In tux32**: `# ip route add 172.16.30.0/24 via 172.16.31.253` 
-   or `# route add -net 172.16.30.0/24 gw 172.16.31.253`
+3. Configure tuxy4/`eth1`'s IP address as per the figure (`172.16.y1.253/24`).
+4. Enable IP forwarding On tuxy4 .
+5. Disable ICMP echo ignore broadcast On tuxy4 
+6. Check the MAC addresses and IP addresses in tuxy4 for `eth0` and `eth1`.
+7. Configure the routes in tuxy3 and tuxy2 so that they can reach each other.
+           **In tux33**: `# ip route add 172.16.y1.0/24 via 172.16.y0.254` 
+   or `# route add -net 172.16.y1.0/24 gw 172.16.y0.254 `
+           **In tux32**: `# ip route add 172.16.y0.0/24 via 172.16.y1.253` 
+   or `# route add -net 172.16.y0.0/24 gw 172.16.y1.253`
 8. Observe the routes available at the 3 tuxes.
-9. Start a capture at tux33.
-10. From tux33, `ping` the other network interfaces (`172.16.30.254`, `172.16.31.253`, `172.16.31.1`) and verify if there is connectivity.
+9. Start a capture at tuxy3.
+10. From tuxy3, `ping` the other network interfaces (`172.16.y0.254`, `172.16.y1.253`, `172.16.y1.1`) and verify if there is connectivity.
 11. Stop the capture and save logs.
-12. Start a capture in tux34 on both interfaces (in Wireshark select with Ctrl+Click the connections to listen to).
+12. Start a capture in tuxy4 on both interfaces (in Wireshark select with Ctrl+Click the connections to listen to).
 13. Clean the ARP tables in the 3 tuxes.
-14. In tux33, `ping` tux32 for a few seconds.
-15. Stop the capture in tux34 and save logs.
+14. In tuxy3, `ping` tuxy2 for a few seconds.
+15. Stop the capture in tuxy4 and save logs.
 16. In Wireshark for the last capture, view the packets from each interface using, in the display filter, the test `frame.interface_id == 0`. Replace `0` with the different numbers for the interfaces. You can check which are available seeing in the `Frame/interface id` on a selected packet. See the figure below for an example on a machine (it has different interfaces).
 
 ## Configure Cisco Router
@@ -44,12 +44,12 @@ W=1 in lab I321  					W= 2 in lab I320
 1. Modify the configuration file, for IP and forwarding so that:
    - the name of the router reflects your Y: 3.
    - the IP addresses for the interfaces are as indicated in the figure above (see moodle)
-   - the route to the network `172.16.30.0/24` goes through tux34 (`172.16.31.253`).
+   - the route to the network `172.16.y0.0/24` goes through tuxy4 (`172.16.y1.253`).
    - The default gateway (to `0.0.0.0`) is as in the figure (through `172.16.W.254`)
 2. Modify the configuration file, for NAT so that:
    - The `nat pool ovrld` uses the IP address `172.16.W.Y9`.--> Verify that the interface for this IP address is configured as `outside`.
-   - Verify that the interface for the `172.16.31.254` IP address is configured as `inside`.
-   - The `access-list 1 permit` has the networks `172.16.30.0/24` and `172.16.31.0/24` (in the access list command the mask is `0.0.0.7`, which is already correct on the file)
+   - Verify that the interface for the `172.16.y1.254` IP address is configured as `inside`.
+   - The `access-list 1 permit` has the networks `172.16.y0.0/24` and `172.16.y1.0/24` (in the access list command the mask is `0.0.0.7`, which is already correct on the file)
 3. Configuring the Router:
    - Access the console for configuring the router through the serial port (Check to see if a tux is already connected to the Router's serial port.  If not connect the serial port of the router to one of the tuxes serial  port (see the [NetLab Network](https://moodle.up.pt/mod/page/view.php?id=89375) if needed))
    - Enter config mode (see below)
@@ -61,9 +61,9 @@ W=1 in lab I321  					W= 2 in lab I320
    - Do a [`ping` from the Cisco Router](https://www.cisco.com/c/en/us/td/docs/routers/access/1900/software/configuration/guide/Software_Configuration/appendixAcli.html#27356) to `172.16.W.254`.
    - Do a [`ping` from the Cisco Router](https://www.cisco.com/c/en/us/td/docs/routers/access/1900/software/configuration/guide/Software_Configuration/appendixAcli.html#27356) to `104.17.113.188` (in the        Internet).    
 5. Configure tux32 and tux34:
-   - Set in tux32 and tux34 the default gateway to the Cisco Router (`172.16.30.254`)
-             **In tux32 and tux34**: `# ip route add default via 172.16.30.254` 
-     or `# route add default gw 172.16.30.254 `
+   - Set in tux32 and tux34 the default gateway to the Cisco Router (`172.16.y0.254`)
+             **In tux32 and tux34**: `# ip route add default via 172.16.y0.254` 
+     or `# route add default gw 172.16.y0.254 `
    - Do a `ping` from tux33 to `172.16.W.254`.
    - Do a `ping` from tux33 to `104.17.113.188` (in the Internet).
 
@@ -78,136 +78,136 @@ W=1 in lab I321  					W= 2 in lab I320
 ##### Ligar Cabos
 
 ```
-TUX33E0  -> Switch Porta 1 
-TUX32E0  -> Switch Porta 2
-TUX34E0  -> Switch Porta 3
-TUX34E1  -> Switch Porta 4
+TUX33E0  -> Switch Porta C
+TUX32E0  -> Switch Porta L
+TUX34E0  -> Switch Porta M
+TUX34E1  -> Switch Porta T
 ```
 
 ##### Configurar IP's
 
-tux33:
+tuxy3:
 
 ```
 > ifconfig eth0 up
-> ifconfig eth0 172.16.30.1/24
+> ifconfig eth0 172.16.y0.1/24
 > ifconfig eth0 
 ```
 
-tux34:
+tuxy4:
 
 ```
 > ifconfig eth0 up
-> ifconfig eth0 172.16.30.254/24
+> ifconfig eth0 172.16.y0.254/24
 > ifconfig eth0 
 
 > ifconfig eth1 up
-> ifconfig eth1 172.16.31.253/24
+> ifconfig eth1 172.16.y1.253/24
 > ifconfig eth1 
 ```
 
-tux32:
+tuxy2:
 
 ```
 > ifconfig eth0 up
-> ifconfig eth0 172.16.31.1/24
+> ifconfig eth0 172.16.y1.1/24
 > ifconfig eth0 
 ```
 
 | IP            | MAC  | tux/ether  |
 | ------------- | ---- | ---------- |
-| 172.16.31.1   |      | tux32 eth0 |
-| 172.16.30.1   |      | tux33 eth0 |
-| 172.16.30.254 |      | tux34 eth0 |
-| 172.16.31.253 |      | tux34 eth1 |
+| 172.16.y1.1   |      | tuxy2 eth0 |
+| 172.16.y0.1   |      | tuxy3 eth0 |
+| 172.16.y0.254 |      | tuxy4 eth0 |
+| 172.16.y1.253 |      | tuxy4 eth1 |
 
 ##### Configurar VLAN's
 
 ```
-TUX33S0  -> T3
+TUXy3S0  -> T3
 T4 -> Switch Console
 ```
 
-Ligas um Cabo `S0`, like TUX33S0, à porta 33 da prateleira de cima (`T3`) e um cabo da porta `T4` a `switch console` e fazes como em [exp2](https://github.com/Ca-moes/RCOM/issues/63)
+Ligas um Cabo `S0`, like TUXy3S0, à porta y3 da prateleira de cima (`T3`) e um cabo da porta `T4` a `switch console` 
 
 Esta secção é para ser feita apenas uma vez, num tux à escolha, a partir do terminal GtkTerm, sem necessidade de alterar cabos.
 
 VLAN 0:
 
-- tux33 eth0 -> port 1
-- tux34 eth0 -> port 3
+- tux33 eth0 -> port C
+- tux34 eth0 -> port M
 
 VLAN 1:
 
-- tux32 eth0 -> port 13
-- tux34 eth1 -> port 14
+- tux32 eth0 -> port L
+- tux34 eth1 -> port T
 
 
 
 ###### Instruções Detalhadas
 
-Dar login no switch (slide 48):
+Dar login no switch :
 
 ```
 »enable
-»password: ****** (deve ser 8nortel, olha para a prateleira e confirma)
+»password: ****** (8nortel)
 ```
 
-Criar VLAN (vlan30) (Slide 44):
+Criar VLAN (vlany0) :
 
 ```
 »configure terminal
-»vlan 30
+»vlan y0
 »end
-»show vlan id 30
+»show vlan id y0
 ```
 
-Add port 1 to vlan 30 (Slide 44):
+Add port C to vlan y0 :
 
 ```
 »configure terminal
-»interface fastethernet 0/1            
+»interface fastethernet 0/C            
 »switchport mode access
-»switchport access vlan 30
+»switchport access vlan y0
 »end
 ```
 
-Add port 3 to vlan 30 (Slide 44):
+Add port M to vlan y0 (Slide 44):
 
 ```
 »configure terminal
-»interface fastethernet 0/3             
+»interface fastethernet 0/M             
 »switchport mode access
-»switchport access vlan 30
+»switchport access vlan y0
 »end
 ```
 
-Criar VLAN (vlan31) (Slide 44):
+Criar VLAN (vlany1):
 
 ```
 »configure terminal
-»vlan 31
+»vlan y1
 »end
-»show vlan id 31
+»show vlan id y1
 ```
 
-Add port 13 to vlan 31 (Slide 44):
+Add port L to vlan y1 (Slide 44):
 
 ```
 »configure terminal
-»interface fastethernet 0/13             
+»interface fastethernet 0/L            
 »switchport mode access
-»switchport access vlan 31
+»switchport access vlan y1
 »end
 ```
 
-Add port 14 to vlan 31 (Slide 44):
+Add port T to vlan y1 (Slide 44):
 
 ```
 »configure terminal
-»interface fastethernet 0/14            
+»interface fastethernet 0/T            
 »switchport mode access
-»switchport access vlan 31
+»switchport access vlan y1
 »end
 ```
 
@@ -228,7 +228,7 @@ testar com números de portas diferentes
 
 ##### Enable IP forwarding & Disable ICMP echo-ignore-broadcast
 
-Passa para o tux34 e faz os seguintes comando no terminal
+Passa para o tuxy4 e faz os seguintes comando no terminal
 
 ```
 echo 1 > /proc/sys/net/ipv4/ip_forward
@@ -237,60 +237,57 @@ echo 0 > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
 
 ### Step 2
 
-Caso ainda não o tenhas feito, guarda os valores IP e MAC das portas eth0 e eth1 do tux34.
+Caso ainda não o tenhas feito, guarda os valores IP e MAC das portas eth0 e eth1 do tuxy4 (tira uma foto, mais rápido).
 
 ### Step 3
 
-  **In tux33**: `# ip route add 172.16.31.0/24 via 172.16.30.254` 
-or `# route add -net 172.16.31.0/24 gw 172.16.30.254 `
-        **In tux32**: `# ip route add 172.16.30.0/24 via 172.16.31.253` 
-or `# route add -net 172.16.30.0/24 gw 172.16.31.253`
+  **In tuxy3**: `# ip route add 172.16.y1.0/24 via 172.16.y0.254` 
+or `# route add -net 172.16.y1.0/24 gw 172.16.y0.254 `
+        **In tuxy2**: `# ip route add 172.16.y0.0/24 via 172.16.y1.253` 
+or `# route add -net 172.16.y0.0/24 gw 172.16.y1.253`
 
-Testa pingar o tux32 a partir do tux33 e o oposto para ver se chegam um ao outro.
+Testa pingar o tuxy2 a partir do tuxy3 e o oposto para ver se chegam um ao outro.
 
 ```
-Em tux33:
-ping 172.16.31.1
+Em tuxy3:
+ping 172.16.y1.1
 
-Em tux32:
-ping 172.16.30.1
+Em tuxy2:
+ping 172.16.y0.1
 ```
 
 Caso haja erros:
 
-- verifica as routes em cada tux com `route -n` para ficarem [desta forma](https://imgur.com/a/IxWSdWm):
+- verifica as routes em cada tux com `route -n`
+- verifica se os cabos estão bem inseridos e o GKTERM tem as portas corretas para cada VLAN
 
 ### Step 4
 
-Fazer `route -n` em cada 1 dos 3 tuxs
+Passar para tuxy3. Ligar o WireShark e começar a capturar pacotes na eth0
 
 ### Step 5
 
-Passar para tux33. Ligar o WireShark e começar a capturar pacotes na eth0
+A partir do tuxy3:
+
+- pingar a eth0 do tuxy4 - `ping 172.16.y0.254`
+- pingar a eth1 do tuxy4 - `ping 172.16.y1.253`
+- pingar a eth0 do tuxy2 - `ping 172.16.y1.1`
+
+Para cada um verificar a conectividade (vê se recebes pacotes)
 
 ### Step 6
 
-A partir do tux33:
-
-- pingar a eth0 do tux34 - `ping 172.16.30.254`
-- pingar a eth1 do tux34 - `ping 172.16.31.253`
-- pingar a eth0 do tux32 - `ping 172.16.31.1`
-
-Para cada um verificar a conectividade
+Para a captura no tuxy3 e guarda os logs 
 
 ### Step 7
 
-Para a captura no tux33 e guardar logs como `exp3_step7.pcapng`
-
-### Step 8
-
-- Passar para o tux34.
+- Passar para o tuxy4.
 - Ligar duas instâncias de WireShark. Uma para o eth0 e outra para o eth1.
 - Começar a capturar na eth0 e começar a capturar na eth1.
 
-### Step 9
+### Step 8
 
-- No tux34, apagar a tabela ARP e verificar se estão limpas
+- No tuxy4, apagar a tabela ARP e verificar se estão limpas
 
 ```
 > arp -a [ver quais são os ips que se podem apagar]
@@ -298,144 +295,34 @@ Para a captura no tux33 e guardar logs como `exp3_step7.pcapng`
 > arp -a [tem de retornar nada]
 ```
 
-- Trocar para o tux32 e fazer o mesmo
-- Trocar para o tux33 e fazer o mesmo
+- Trocar para o tuxy2 e fazer o mesmo
+- Trocar para o tuxy3 e fazer o mesmo
+
+### Step 9
+
+No tuxy3 começar a pingar o tuxy2 `ping 172.16.y1.1` e ao fim de 10 pings fazer CTRL+C.
 
 ### Step 10
 
-No tux33 começar a pingar o tux32 `ping 172.16.31.1` e ao fim de 10 pings fazer CTRL+C.
-
-### Step 11
-
-Passar para tux34, parar as capturas e guardar os ficheiros como: `exp3_step11_eth0.pcapng` e `exp3_step11_eth1.pcapng`
-
-
+Passar para tuxy4, parar as capturas e guardar os ficheiros 
 
 ## Step by step - Cisco Router
 
 ### Step 1
 
-Do router>`enable`
+Ligar os Cabos (os mesmos que ligaste na primeira parte + cabos GE):
 
-router# configure terminal
+Verify that the `GE0` interface of the Cisco Router is connected to the Lab Router.
 
-Enter this info (one per line):
+Verify that the `GE1` interface of the Cisco Router is connected to the Switch.
 
-```
-!
-version 12.4
-service timestamps debug datetime msec
-service timestamps log datetime msec
-service password-encryption
-!
-hostname gnu-rtr3
-!
-boot-start-marker
-boot-end-marker
-!
-! card type command needed for slot/vwic-slot 0/0
-logging message-counter syslog
-logging buffered 51200 warnings
-enable secret 5 $1$u53Q$vBawpP8.1YpCT6ypap1zX.
-!
-no aaa new-model
-dot11 syslog
-ip source-route
-!
-!
-!
-!
-ip cef
-no ip domain lookup
-no ipv6 cef
-!
-multilink bundle-name authenticated
-!
-!
-!
-!
-!
-username root privilege 15 secret 5 $1$8AFR$bNAYevxPFjXFExpnZI2fj.
-username cisco password 7 02050D480809
-archive
- log config
-  hidekeys
-! 
-!
-!
-!
-!
-!
-!
-!
-interface FastEthernet0/0
- description $ETH-LAN$$ETH-SW-LAUNCH$$INTF-INFO-FE 0$
- ip address 172.16.31.254 255.255.255.0
- ip nat inside
- ip virtual-reassembly
- duplex auto
- speed auto
-!
-interface FastEthernet0/1
- ip address 172.16.1.39 255.255.255.0
- ip nat outside
- ip virtual-reassembly
- duplex auto
- speed auto
-!
-ip forward-protocol nd
-ip route 0.0.0.0 0.0.0.0 172.16.1.254
-ip route 172.16.30.0 255.255.255.0 172.16.31.253
-ip http server
-ip http access-class 23
-ip http authentication local
-ip http secure-server
-ip http timeout-policy idle 60 life 86400 requests 10000
-!
-!
-ip nat pool ovrld 172.16.1.39 172.16.1.39 prefix-length 24
-ip nat inside source list 1 pool ovrld overload
-!
-access-list 1 permit 172.16.30.0 0.0.0.7
-access-list 1 permit 172.16.31.0 0.0.0.7
-!
-!
-!
-!
-!
-!
-control-plane
-!
-!
-!
-line con 0
- login local
-line aux 0
-line vty 0 4
- access-class 23 in
- privilege level 15
- login local
- transport input telnet ssh
-line vty 5 15
- access-class 23 in
- privilege level 15
- login local
- transport input telnet ssh
-!
-scheduler allocate 20000 1000
-end
-```
+### Step 2
 
-End with CTRL + Z
-
-router(config)# exit
-
-Do `show running-config`
-
-Do `copy running-config startup-config`
+No GTKTERM, fazer isto para configurar o router cisco
 
 ```
-conf t
+enable
+configure terminal
 interface gigabitethernet 0/0 
 ip address 172.16.31.254 255.255.255.0
 no shutdown
@@ -455,53 +342,50 @@ ip route 172.16.30.0 255.255.255.0 172.16.3y1.253
 end
 ```
 
+Do `show running-config`
 
+Do `copy running-config startup-config`
 
-### Step 2
+### Step 3
+
+Configurar os IP's para cada tux (tal como fizeste na primeira para da experiência)
+
+### Step 4
+
+Configurar VLANs (da mesma maneira que fizeste no início da experiência) e adicionar o router à VLAN31 (ter atenção aos cabos, para saber as portas)
+
+### Step 5
+
+Fazer o enable do IP forwarding & disable ICMP echo-ignore-broadcast
+
+### Step 6
+
+Adicionar as routes
+
+**In tux33**: `# ip route add 172.16.31.0/24 via 172.16.30.254` 
+or `# route add -net 172.16.31.0/24 gw 172.16.30.254 `
+        **In tux32**: `# ip route add 172.16.30.0/24 via 172.16.31.253` 
+or `# route add -net 172.16.30.0/24 gw 172.16.31.253`
+
+### Step 7
+
+Testar conectividade entre tux33 e tux32 (para ver que está tudo bem)
+
+### Step 8
 
 From Cisco router, do:
 
-1. ping 172.16.31.254
+1. ping a todos os tuxes
 2. ping 172.16.1.254
 3. ping 104.17.113.188
 
-### Step 3
+### Step 9
 
 **In tuxy2 and tuxy4**: `# ip route add default via 172.16.30.254` 
 or `# route add default gw 172.16.30.254 `
 
+### Step 10
+
 From tux33, do ping 172.16.1.254
 
-From tux33, do ping 104.113.188
-
-
-
-**Notas para segunda parte da experiência**
-
-1. Ligar cabos
-
-2. Configurar router cisco
-
-3. Configurar IP's
-
-4. Configurar VLANs--->adicionar router à VLAN31 (ter atenção aos cabos)
-
-5. Fazer o enable do IP forwarding & disable ICMP echo-ignore-broadcast
-
-6. Adicionar as routes
-
-   **In tux33**: `# ip route add 172.16.31.0/24 via 172.16.30.254` 
-   or `# route add -net 172.16.31.0/24 gw 172.16.30.254 `
-           **In tux32**: `# ip route add 172.16.30.0/24 via 172.16.31.253` 
-   or `# route add -net 172.16.30.0/24 gw 172.16.31.253`
-
-7. Testar conectividade entre tux33 e tux32 (para ver que está tudo bem)
-
-8. Adicionar default routes
-
-   **In tux32 and tux34**: `# ip route add default via 172.16.30.254` 
-   or `# route add default gw 172.16.30.254 `
-
-9. Fazer os pings
-
-   
+From tux33, do ping 104.113.188 
