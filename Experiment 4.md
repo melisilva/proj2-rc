@@ -373,10 +373,18 @@ Testar conectividade entre tux33 e tux32 (para ver que está tudo bem)
 
 ### Step 8
 
-From Cisco router, do:
+From Cisco router (GKTERM), do:
 
-1. ping a todos os tuxes
+1. ping a todos os tuxes:
+
+   pingar o tuxy2 `ping 172.16.y1.1`
+
+   ping tuxy3 `ping 172.16.y0.1`
+
+   ping tuxy4 `ping 172.16.y0.254` (let's try to ping everyone's eth0)
+
 2. ping 172.16.1.254
+
 3. ping 104.17.113.188
 
 ### Step 9
