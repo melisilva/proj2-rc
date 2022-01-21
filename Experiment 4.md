@@ -5,24 +5,39 @@
 ### Steps 
 
 1. Connect a cable from tuxy4/`eth1` to the switch and place it in vlan31 
+
 2. Verify the VLANs on the switch (`show vlan brief`).
+
 3. Configure tuxy4/`eth1`'s IP address as per the figure (`172.16.y1.253/24`).
+
 4. Enable IP forwarding On tuxy4 .
+
 5. Disable ICMP echo ignore broadcast On tuxy4 
+
 6. Check the MAC addresses and IP addresses in tuxy4 for `eth0` and `eth1`.
+
 7. Configure the routes in tuxy3 and tuxy2 so that they can reach each other.
            **In tux33**: `# ip route add 172.16.y1.0/24 via 172.16.y0.254` 
    or `# route add -net 172.16.y1.0/24 gw 172.16.y0.254 `
            **In tux32**: `# ip route add 172.16.y0.0/24 via 172.16.y1.253` 
    or `# route add -net 172.16.y0.0/24 gw 172.16.y1.253`
+   
 8. Observe the routes available at the 3 tuxes.
-9. Start a capture at tuxy3.
-10. From tuxy3, `ping` the other network interfaces (`172.16.y0.254`, `172.16.y1.253`, `172.16.y1.1`) and verify if there is connectivity.
-11. Stop the capture and save logs.
-12. Start a capture in tuxy4 on both interfaces (in Wireshark select with Ctrl+Click the connections to listen to).
-13. Clean the ARP tables in the 3 tuxes.
-14. In tuxy3, `ping` tuxy2 for a few seconds.
-15. Stop the capture in tuxy4 and save logs.
+
+      Start a capture at tuxy3.
+
+9. From tuxy3, `ping` the other network interfaces (`172.16.y0.254`, `172.16.y1.253`, `172.16.y1.1`) and verify if there is connectivity.
+
+10. Stop the capture and save logs.
+
+11. Start a capture in tuxy4 on both interfaces (in Wireshark select with Ctrl+Click the connections to listen to).
+
+12. Clean the ARP tables in the 3 tuxes.
+
+13. In tuxy3, `ping` tuxy2 for a few seconds.
+
+14. Stop the capture in tuxy4 and save logs.
+
 16. In Wireshark for the last capture, view the packets from each interface using, in the display filter, the test `frame.interface_id == 0`. Replace `0` with the different numbers for the interfaces. You can check which are available seeing in the `Frame/interface id` on a selected packet. See the figure below for an example on a machine (it has different interfaces).
 
 ## Configure Cisco Router
@@ -78,10 +93,10 @@ W=1 in lab I321  					W= 2 in lab I320
 ##### Ligar Cabos
 
 ```
-TUX33E0  -> Switch Porta C
-TUX32E0  -> Switch Porta L
-TUX34E0  -> Switch Porta M
-TUX34E1  -> Switch Porta T
+TUX33E0  -> Switch Porta 1
+TUX32E0  -> Switch Porta 13
+TUX34E0  -> Switch Porta 2
+TUX34E1  -> Switch Porta 14
 ```
 
 ##### Configurar IP's
@@ -134,13 +149,13 @@ Esta secção é para ser feita apenas uma vez, num tux à escolha, a partir do 
 
 VLAN 0:
 
-- tux33 eth0 -> port C
-- tux34 eth0 -> port M
+- tux33 eth0 -> port C 1
+- tux34 eth0 -> port M 2
 
 VLAN 1:
 
-- tux32 eth0 -> port L
-- tux34 eth1 -> port T
+- tux32 eth0 -> port L 13
+- tux34 eth1 -> port T 14
 
 
 
