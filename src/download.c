@@ -3,7 +3,7 @@
 #include <string.h>
 #include <netdb.h>
 #include <netinet/in.h>
-#include<arpa/inet.h>
+#include <arpa/inet.h>
 #include <unistd.h>
 
 #include "parse.h"
@@ -54,12 +54,12 @@ int main(int argc, char * argv[]){
     printf(CYN "IP Address : %s\n", inet_ntoa(*((struct in_addr *) h->h_addr)));
 
     char* ip =  inet_ntoa(*((struct in_addr *) h->h_addr));
-    int socketAfd=start_socket(ip,PORT);
+    int socketAfd = start_socket(ip,PORT);
 
     //Get code reply 220
-    int code= getReply(socketAfd);
+    int code = getReply(socketAfd);
     //Check if it's the code we wanted
-    if(code!=SERVICE_READY){
+    if(code != SERVICE_READY){
         printf(RED "ERROR - instead of code 220, sinalizing that the socket was ready, we got an error code\n");
         return 1;
     }
