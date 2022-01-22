@@ -12,11 +12,11 @@
 
 3. ##### Configured IP addresses and netmask of ports
 
-​        From FastEthernet0/0: 172.16.30.1 255.255.255.0
+     From FastEthernet0/0: 172.16.30.1 255.255.255.0
 
-​        From FastEthernet0/1: 172.16.254.45 255.255.255.0
+     From FastEthernet0/1: 172.16.254.45 255.255.255.0
 
-#####    4. Configured routes
+3. Configured routes
 
 ```
 ip route 0.0.0.0 0.0.0.0 172.16.254.1
